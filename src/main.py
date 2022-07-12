@@ -12,7 +12,7 @@ from func import *
 address  = ""
 password = ""
 
-Download_number = 1
+download_number = 1
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 driver.get("https://comic-fuz.com/account/signin")
@@ -32,8 +32,8 @@ Path("../output").mkdir(parents=True, exist_ok=True)
 
 for maga_name in magazines:
 	time.sleep(1)
-	Plan_link = driver.find_element(By.LINK_TEXT, "月額プラン")
-	Plan_link.click()
+	plan_link = driver.find_element(By.LINK_TEXT, "月額プラン")
+	plan_link.click()
 	time.sleep(1)
 
 	maga_link = driver.find_element(By.LINK_TEXT, maga_name)
