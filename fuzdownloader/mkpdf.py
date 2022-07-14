@@ -1,5 +1,5 @@
 from PyPDF2 import PdfFileWriter, PdfFileReader
-import img2pdf
+from . import img2pdf
 
 class bcolors:
     HEADER = '\033[95m'
