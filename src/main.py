@@ -40,7 +40,7 @@ for book_id in picked_books:
 					bcolors.ENDC
 				)
 			else:
-				info = load_book(driver, "#" + str(book_uid), need_load=False)
+				info = load_book(driver, "#" + str(book_uid), need_load=True)
 				make_pdf(OUTPUT_DIR, info[0], int(info[1]))
 				shutil.rmtree(OUTPUT_DIR + "/" + info[0])
 				print(
@@ -58,7 +58,7 @@ for book_id in picked_books:
 			read_button = driver.find_elements(By.LINK_TEXT, "読む")
 			read_button[issue_id + 1].click()
 			time.sleep(1)
-			info = load_book(driver, need_load=False)
+			info = load_book(driver, need_load=True)
 			bookmarks = get_bookmarks(driver)
 			make_pdf(OUTPUT_DIR, info[0], int(info[1]), bookmarks)
 			shutil.rmtree(OUTPUT_DIR + "/" + info[0])
