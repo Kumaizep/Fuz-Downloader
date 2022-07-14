@@ -8,6 +8,7 @@ import base64
 
 OUTPUT_DIR = "../output"
 DATA_DIR = "../data"
+IMG_SIZE = (1350, 1938)
 
 class bcolors:
     HEADER = '\033[95m'
@@ -76,7 +77,7 @@ def is_alert_present(driver, account):
 			)
 		 	time.sleep(10)
 		 	try_login(driver, account)
-		 	return False
+		 	return is_alert_present(driver, account)
 	except:
 		return False
 
@@ -139,37 +140,30 @@ def init_book(driver):
 	page_num = int(page.text[4:]) - 1	
 	return page_num
 
-def load_book(driver, mark=""):
+def load_book(driver, mark="", need_load = True):
 	page_num = init_book(driver)
 
 	title = driver.find_element(By.CSS_SELECTOR, "p[class^='ViewerHeader']").text + mark
 	save_dir = OUTPUT_DIR + "/" + title
 	Path(save_dir).mkdir(parents=True, exist_ok=True)
 
-	need_turning = True
-	for pn in range(page_num):
-		print(
-			"\r" + bcolors.OKBLUE, 
-			"[-]", title, "[", str(pn + 1), '/', str(page_num), ']', 
-			bcolors.ENDC, 
-			end=''
-		)
-		curr_page_uri = get_page_uri(driver, pn)
-		bytes = get_file_content_chrome(driver, curr_page_uri)
-		save_file(save_dir, pn, bytes)
-		if need_turning == True:
-			driver.find_element(By.XPATH, "//body").send_keys(Keys.ARROW_LEFT)
-		need_turning = not need_turning
+	if need_load:
+		need_turning = True
+		for pn in range(page_num):
+			print(
+				"\r" + bcolors.OKBLUE, 
+				"[-]", title, "[", str(pn + 1), '/', str(page_num), ']', 
+				bcolors.ENDC, 
+				end=''
+			)
+			curr_page_uri = get_page_uri(driver, pn)
+			bytes = get_file_content_chrome(driver, curr_page_uri)
+			save_file(save_dir, pn, bytes)
+			if need_turning == True:
+				driver.find_element(By.XPATH, "//body").send_keys(Keys.ARROW_LEFT)
+			need_turning = not need_turning
+			
 	return (title, str(page_num))
-
-# def load_book_test(driver):
-# 	page_num = init_book(driver)
-
-# 	title = driver.find_element(By.CSS_SELECTOR, "p[class^='ViewerHeader']").text
-# 	save_dir = OUTPUT_DIR + "/" + title
-# 	Path(save_dir).mkdir(parents=True, exist_ok=True)
-# 	return (title, str(page_num))
-
 
 def get_page_uri(driver, page):
 	page_img = driver.find_element(By.XPATH, "//img[@alt='page_" + str(page) + "']")
@@ -195,7 +189,7 @@ def get_file_content_chrome(driver, uri):
 	return base64.b64decode(result)
 
 def save_file(save_dir, page, data):
-	path = save_dir + "/" + str(page) + ".png"
+	path = save_dir + "/" + str(page) + ".jpeg"
 	with open(path, 'wb') as binary_file:
 		binary_file.write(data)
 
@@ -207,6 +201,5 @@ def get_bookmarks(driver):
 	result = [[dn.text, di.text] for dn, di in zip(dailogs_name, dailogs_index)]
 	close_button = driver.find_element(By.CSS_SELECTOR, "button[class^=ViewerIndexModal_dialog__closeButton]")
 	return result
-
 
 

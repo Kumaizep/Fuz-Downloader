@@ -1,4 +1,4 @@
-from PIL import Image
+from fpdf import FPDF
 from PyPDF2 import PdfFileWriter, PdfFileReader
 
 def add_bookmark(path, bookmarks):
@@ -12,14 +12,16 @@ def add_bookmark(path, bookmarks):
 		writer.write(file)
 
 
-def make_pdf(title, page_num, bookmarks=[("0", "0")], make_bookmark=True):
-	save_dir = "../output/" + title
-	images = [
+def make_pdf(save_dir, title, page_num, size, bookmarks=[("-1", "-1")]):
+	pdf_path = save_dir + '/' + title + ".pdf"
+	pdf = FPDF('P', 'pt', size)
+	# imagelist is the list with all image filenames
+	imagelist = [
 		Image.open(save_dir + '/' + str(pn) + ".png") for pn in range(page_num)
 	]
-	pdf_path = save_dir + '/' + title + ".pdf"
-	images[0].save(
-		pdf_path, "PDF" ,resolution=100.0, save_all=True, append_images=images[1:]
-	)
-	if make_bookmark:
+	for image in imagelist:
+	    pdf.add_page()
+	    pdf.image(image, 0, 0, size[0], size[1])
+	pdf.output(pdf_path)
+	if make_bookmark != [("-1", "-1")]:
 		add_bookmark(pdf_path, bookmarks)

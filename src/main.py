@@ -4,9 +4,10 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import time
+import shutil
 
 from func import *
-from img2pdf import *
+from mkpdf import *
 
 Path("../output").mkdir(parents=True, exist_ok=True)
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
@@ -39,8 +40,9 @@ for book_id in picked_books:
 					bcolors.ENDC
 				)
 			else:
-				info = load_book(driver, "#" + str(book_uid))
-				make_pdf(info[0], int(info[1]),make_bookmark=False)
+				info = load_book(driver, "#" + str(book_uid), need_load=False)
+				make_pdf(OUTPUT_DIR, info[0], int(info[1]))
+				shutil.rmtree(OUTPUT_DIR + "/" + info[0])
 				print(
 					'\r' + bcolors.OKCYAN, 
 					"[+]", info[0], "[Download Done]", 
@@ -56,9 +58,10 @@ for book_id in picked_books:
 			read_button = driver.find_elements(By.LINK_TEXT, "読む")
 			read_button[issue_id + 1].click()
 			time.sleep(1)
-			info = load_book(driver)
+			info = load_book(driver, need_load=False)
 			bookmarks = get_bookmarks(driver)
-			make_pdf(info[0], int(info[1]), bookmarks)
+			make_pdf(OUTPUT_DIR, info[0], int(info[1]), bookmarks)
+			shutil.rmtree(OUTPUT_DIR + "/" + info[0])
 			print(
 				'\r' + bcolors.OKCYAN, 
 				"[+]", info[0], "[Download Done]", 
@@ -66,7 +69,7 @@ for book_id in picked_books:
 			)
 			exit_button = driver.find_element(By.CSS_SELECTOR, "button[class^=ViewerHeader]")
 			exit_button.click()
-			time.sleep(1)
+			time.sleep(2)
 
 print(bcolors.OKCYAN, "[+] クエスト ドネ", bcolors.ENDC)
 
