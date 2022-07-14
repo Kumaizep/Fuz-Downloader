@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 import shutil
@@ -12,11 +13,13 @@ from .mkpdf import *
 def main() -> None:
     Path("../output").mkdir(parents=True, exist_ok=True)
 
+    options = Options()
+    options.add_argument("--headless")
     if shutil.which('chromedriver') is None:
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     else:
-        driver = webdriver.Chrome()
-    driver.implicitly_wait(1)
+        driver = webdriver.Chrome(options=options)
+    driver.implicitly_wait(3)
 # driver.maximize_window()
     driver.get("https://comic-fuz.com/account/signin")
 
