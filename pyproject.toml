@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "fuzdownloader"
+version = "0.1.0"
+description = ""
+authors = ["Kumaizep <321orz321@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+selenium = "^4.3.0"
+webdriver-manager = "^3.8.1"
+img2pdf = "^0.4.4"
+PyPDF2 = "^2.5.0"
+fpdf = "^1.7.2"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+fuzdownloader = "fuzdownloader.main:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
