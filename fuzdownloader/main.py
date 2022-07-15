@@ -82,3 +82,5 @@ def main() -> None:
                 time.sleep(2)
 
     print(bcolors.OKCYAN, "[+] クエスト ドネ", bcolors.ENDC)
+
+    driver.quit()   
