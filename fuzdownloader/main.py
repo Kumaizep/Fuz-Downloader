@@ -36,7 +36,7 @@ def main() -> None:
         if book_id == len(purchased_books):
             # print(bcolors.WARNING, "[#] この機能はまだ利用できません", bcolors.ENDC)
             # pass
-            print("<その他ーURLからダウンロードします>")
+            print("<その他ーURLでダウンロード>")
             specified_book = other_selector()
             for book_uid in specified_book:
                 book_url = "https://comic-fuz.com/manga/viewer/" + str(book_uid)

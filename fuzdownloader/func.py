@@ -119,7 +119,7 @@ def book_selector(driver):
     for book_title in books_title:
         print('(', count, ')', book_title.text)
         count += 1
-    print('(', count, ')', "その他")
+    print('(', count, ')', "その他ーURLでダウンロード")
     return get_select_result(0, count)
 
 
@@ -135,7 +135,7 @@ def other_selector():
     while need_select:
         try:
             result = list(map(int, input(
-                "ダウンロードしたい本のURLの末尾にある番号を入力してください。\n (例えば、「ご注文はうさぎですか？１巻 第０話」の場合は、「2443」を入力してください。スペースで区切る。) \n").split()))
+                "ダウンロードしたい本のURLの末尾にある番号を入力してください。\n (例えば、「ご注文はうさぎですか？１巻 第０話」のURLは「https://comic-fuz.com/manga/viewer/2443」なので、ダウンロードするときは「2443」と入力してください。スペースで区切る。) \n").split()))
             need_select = False
             for i in result:
                 if i < 0:
