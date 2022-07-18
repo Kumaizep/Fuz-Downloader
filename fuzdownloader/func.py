@@ -1,10 +1,11 @@
+from typing import List
 from pathlib import Path
 from os.path import exists
 
 from .param import *
 
 
-def get_select_result(min_id, max_id):
+def get_select_result(min_id: int, max_id: int) -> List[int]:
     need_select = True
     while need_select:
         try:
@@ -17,12 +18,12 @@ def get_select_result(min_id, max_id):
                     print(bcolors.WARNING, "[!] 無効な選択：", str(i), bcolors.ENDC)
                     need_select = True
         except:
-            print(bcolors.WARNING, "[!] 指定られたフォームを入力してください", bcolors.ENDC)
+            print(bcolors.WARNING, "[!] 指定されている形式で入力してください。", bcolors.ENDC)
     result.sort()
     return result
 
 
-def get_url_select_result():
+def get_url_select_result() -> List[int]:
     print("<その他ーURLでダウンロード>")
     need_select = True
     while need_select:
@@ -41,12 +42,12 @@ def get_url_select_result():
                     print(bcolors.WARNING, "[!] 無効な選択：", str(i), bcolors.ENDC)
                     need_select = True
         except:
-            print(bcolors.WARNING, "[!] 指定られたフォームを入力してください", bcolors.ENDC)
+            print(bcolors.WARNING, "[!] 指定されている形式で入力してください。", bcolors.ENDC)
     result.sort()
     return result
 
 
-def get_account_info():
+def get_account_info() -> List[str]:
     path = DATA_DIR + "/account"
     if exists(path):
         with open(path, "r") as file:
@@ -59,14 +60,14 @@ def get_account_info():
         return [address, password]
 
 
-def save_account_info(account):
+def save_account_info(account) -> None:
     Path(DATA_DIR).mkdir(parents=True, exist_ok=True)
     with open(DATA_DIR + "/account", "w") as file:
         account[0] = account[0] + "\n"
         file.writelines(account)
 
 
-def save_file(save_dir, page, data):
+def save_file(save_dir, page, data) -> None:
     path = save_dir + "/" + str(page) + ".jpeg"
     with open(path, "wb") as binary_file:
         binary_file.write(data)
