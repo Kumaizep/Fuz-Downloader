@@ -1,3 +1,5 @@
+import sys
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from pathlib import Path
@@ -7,6 +9,10 @@ from .param import *
 
 
 def main() -> None:
+    skip_sele = False
+    if len(sys.argv) >= 2 and sys.argv[1] == "new":
+        skip_sele = True
+
     Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 
     # Open Fuz Comic web with browser.
@@ -18,7 +24,7 @@ def main() -> None:
     # Pick items to download from your purchased titles.
     # Potential bug: comics purchased with gold coins may cause loading errors if
     #                the interface is different from the monthly magazine interface.
-    picked_books = fuz_web.book_selector()
+    picked_books = fuz_web.book_selector(skip_sele)
     pur_books_num = len(
         fuz_web.driver.find_elements(By.CSS_SELECTOR, "a[class^='Magazine']")
     )
@@ -39,7 +45,7 @@ def main() -> None:
                     fuz_web.download_book("#" + str(specified_book))
         # Handling "Normal" options.
         else:
-            picked_issues = fuz_web.issue_selector(picked_book)
+            picked_issues = fuz_web.issue_selector(picked_book, skip_sele)
             for picked_issue in picked_issues:
                 fuz_web.jump_to_picked_issue(picked_issue)
                 fuz_web.download_book()

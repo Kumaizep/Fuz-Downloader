@@ -77,7 +77,7 @@ class fuz_browser:
         else:
             return False
 
-    def book_selector(self) -> List[int]:
+    def book_selector(self, skip: bool) -> List[int]:
         self.jump_to_purchased()
         books_title = self.driver.find_elements(By.CSS_SELECTOR, "h3")
         count = 0
@@ -85,7 +85,11 @@ class fuz_browser:
             print("(", count, ")", book_title.text)
             count += 1
         print("(", count, ")", "その他ーURLでダウンロード")
-        return get_select_result(0, count)
+        if skip:
+            print(bcolors.OKCYAN, "[+] セレクター： ( 0 )", bcolors.ENDC)
+            return [0]
+        else:
+            return get_select_result(0, count)
 
     def jump_to_purchased(self) -> None:
         self.driver.get("https://comic-fuz.com/bookshelf")
@@ -93,14 +97,18 @@ class fuz_browser:
         option_lables[2].click()
         time.sleep(1)
 
-    def issue_selector(self, book_id: int) -> List[int]:
+    def issue_selector(self, book_id: int, skip: bool) -> List[int]:
         self.jump_to_picked_book(book_id)
         title = self.driver.find_element(By.CSS_SELECTOR, "h1")
         print("<", title.text.split()[0], ">")
         issues_title = self.driver.find_elements(By.CSS_SELECTOR, "h2")
         for count in range(3):
             print("(", count, ")", issues_title[count].text)
-        return get_select_result(0, 2)
+        if skip:
+            print(bcolors.OKCYAN, "[+] セレクター： ( 0 )", bcolors.ENDC)
+            return [0]
+        else:
+            return get_select_result(0, 2)
 
     def jump_to_picked_book(self, book_id: int) -> None:
         self.jump_to_purchased()

@@ -20,6 +20,7 @@ For execution:
 
 2. Execute `poetry run fuzdownloader`, then follow the instructions in the CLI to enter account information and select items to download.
 	- Before the first executeion, you need execute `poetry install` to ensure that the necessary modules are installed correctly.
+	- For downloading only the latest issue of the magazine, you can execute `poetry run fuzdownloader new`
 
 3. The downloaded file will be saved as `{where_you_unzip_to}/Fuz-downloader-main/output/{comic_title}.pdf`.
 
