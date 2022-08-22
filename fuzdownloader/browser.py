@@ -155,7 +155,7 @@ class fuz_browser:
             for pn in range(page_num):
                 print(
                     "\r" + bcolors.OKBLUE,
-                    "[-]" + title + " [ " + str(pn + 1) + " / " + str(page_num) + " ]",
+                    "[-] " + title + " [ " + str(pn + 1) + " / " + str(page_num) + " ]",
                     bcolors.ENDC,
                     end="",
                 )
