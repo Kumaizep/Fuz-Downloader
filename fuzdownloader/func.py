@@ -23,7 +23,7 @@ def get_select_result(min_id: int, max_id: int) -> List[int]:
     return result
 
 
-def get_url_select_result() -> List[int]:
+def get_reader_url_select_result() -> List[int]:
     print("<その他ーURLでダウンロード>")
     need_select = True
     while need_select:
@@ -33,6 +33,29 @@ def get_url_select_result() -> List[int]:
                     int,
                     input(
                         "ダウンロードしたい本のURLの末尾にある番号を入力してください。\n (例えば、「ご注文はうさぎですか？１巻 第０話」のURLは「https://comic-fuz.com/manga/viewer/2443」なので、ダウンロードするときは「2443」と入力してください。スペースで区切る。) \n"
+                    ).split(),
+                )
+            )
+            need_select = False
+            for i in result:
+                if i < 0:
+                    print(bcolors.WARNING, "[!] 無効な選択：", str(i), bcolors.ENDC)
+                    need_select = True
+        except:
+            print(bcolors.WARNING, "[!] 指定されている形式で入力してください。", bcolors.ENDC)
+    result.sort()
+    return result
+
+def get_manga_url_select_result() -> List[int]:
+    print("<その他ーURLでダウンロード>")
+    need_select = True
+    while need_select:
+        try:
+            result = list(
+                map(
+                    int,
+                    input(
+                        "ダウンロードしたい作品のURLの末尾にある番号を入力してください。\n (例えば、「ご注文はうさぎですか？」のURLは「https://comic-fuz.com/manga/183」なので、ダウンロードするときは「183」と入力してください。スペースで区切る。) \n"
                     ).split(),
                 )
             )

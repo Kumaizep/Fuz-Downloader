@@ -21,7 +21,7 @@ def add_bookmark(path: str, bookmarks: List[List[str]], title: str) -> None:
 
 def make_pdf(save_dir: str, title: str, page_num: int, bookmarks=[["-1", "-1"]]) -> None:
     print("\r" + bcolors.OKBLUE, "[-]", title, "[converting]", bcolors.ENDC, end="")
-    img_dir = save_dir + "/" + title
+    img_dir = OUTPUT_DIR + "/" + "TEMP" + title
     pdf_path = save_dir + "/" + title + ".pdf"
     images = [img_dir + "/" + str(pn) + ".jpeg" for pn in range(page_num)]
     dpix = dpiy = 200

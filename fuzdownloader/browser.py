@@ -14,7 +14,6 @@ from .param import *
 from .func import *
 from .mkpdf import *
 
-
 class fuz_browser:
     """docstring for fuz_browser"""
 
@@ -84,12 +83,13 @@ class fuz_browser:
         for book_title in books_title:
             print("(", count, ")", book_title.text)
             count += 1
-        print("(", count, ")", "その他ーURLでダウンロード")
+        print("(", count, ")", "その他： リーダーページのURLでダウンロード")
+        print("(", count + 1, ")", "その他： 指定されたURLのすべての無料単話")
         if skip:
             print(bcolors.OKCYAN, "[+] セレクター： ( 0 )", bcolors.ENDC)
             return [0]
         else:
-            return get_select_result(0, count)
+            return get_select_result(0, count + 1)
 
     def jump_to_purchased(self) -> None:
         self.driver.get("https://comic-fuz.com/bookshelf")
@@ -123,11 +123,18 @@ class fuz_browser:
         read_button[issue_id + 1].click()
         time.sleep(1)
 
-    def download_book(self, mark="") -> None:
+    def download_book(self, mark="", subdir="") -> None:
         info = self.load_book(mark)
         bookmarks = self.get_bookmarks()
-        make_pdf(OUTPUT_DIR, info[0], int(info[1]), bookmarks)
-        shutil.rmtree(OUTPUT_DIR + "/" + info[0])
+        save_dir = OUTPUT_DIR
+        if subdir == "@@RESERVED_AS_TITLE_LA":
+            subdir = info[2]
+        if subdir != "":
+            save_dir = save_dir + "/" + subdir
+            Path(save_dir).mkdir(parents=True, exist_ok=True)
+
+        make_pdf(save_dir, info[0], int(info[1]), bookmarks)
+        shutil.rmtree(OUTPUT_DIR + "/" + "TEMP" + info[0])
         print("\r" + bcolors.OKCYAN, "[+]", info[0], "[ Download Done ]", bcolors.ENDC)
         exit_button = self.driver.find_element(
             By.CSS_SELECTOR, "button[class^=ViewerHeader]"
@@ -138,11 +145,9 @@ class fuz_browser:
     def load_book(self, mark="", need_load=True) -> List[str]:
         page_num = self.init_book()
 
-        title = (
-            self.driver.find_element(By.CSS_SELECTOR, "p[class^='ViewerHeader']").text
-            + mark
-        )
-        save_dir = OUTPUT_DIR + "/" + title
+        origin_title = self.driver.find_element(By.CSS_SELECTOR, "p[class^='ViewerHeader']").text
+        title = origin_title + mark
+        save_dir = OUTPUT_DIR + "/" + "TEMP" + title
         Path(save_dir).mkdir(parents=True, exist_ok=True)
 
         if need_load:
@@ -162,7 +167,7 @@ class fuz_browser:
                         Keys.ARROW_LEFT
                     )
                 need_turning = not need_turning
-        return [title, str(page_num)]
+        return [title, str(page_num), origin_title]
 
     def init_book(self) -> int:
         page = self.driver.find_element(
@@ -225,7 +230,36 @@ class fuz_browser:
         result = [[dn.text, di.text] for dn, di in zip(dailogs_name, dailogs_index)]
         return result
 
-    def jump_to_viewer(self, book_id:int) -> None:
+    def jump_to_reader(self, book_id:int) -> None:
         book_url = "https://comic-fuz.com/manga/viewer/" + str(book_id)
         self.driver.get(book_url)
         time.sleep(1)
+
+    def get_free_chapter(self) -> List[List[str]]:
+        chap_elems = self.driver.find_elements(
+            By.CSS_SELECTOR, "a[class^=Chapter_chapter]"
+        )
+        free_chaps = list()
+        chap_count = 0
+        for chap_elem in chap_elems:
+            elem_text = chap_elem.text.split('\n')
+            if "無料" in elem_text:
+                free_chaps.append([str(chap_count), elem_text[0]])
+            chap_count = chap_count + 1
+
+        return free_chaps
+
+    def jump_to_specified_manga(self, manga_id:int) -> None:
+        book_url = "https://comic-fuz.com/manga/" + str(manga_id)
+        self.driver.get(book_url)
+        time.sleep(1)
+
+    def jump_to_picked_chapter(self, chapter_id: int) -> None:
+        read_button = self.driver.find_elements(
+            By.CSS_SELECTOR, "a[class^=Chapter_chapter]"
+        )
+        read_button[chapter_id].click()
+        time.sleep(1)
+
+
+
