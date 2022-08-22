@@ -47,7 +47,7 @@ def main() -> None:
                     for chapter in chapters:
                         fuz_web.jump_to_specified_manga(specified_book)
                         fuz_web.jump_to_picked_chapter(int(chapter[0]))
-                        fuz_web.download_book("#" + chapter[1], book_title)
+                        fuz_web.download_book(chapter[1], book_title)
         # Handling the "Other: reader page url" option.
         elif picked_book == pur_books_num:
             specified_books = get_reader_url_select_result()
