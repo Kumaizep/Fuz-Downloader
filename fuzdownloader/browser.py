@@ -44,6 +44,7 @@ class fuz_browser:
             self.try_login()
         print(bcolors.OKCYAN, "[+] ログインが完了しました。", bcolors.ENDC)
         save_account_info(self.account)
+        time.sleep(1)
 
     def try_login(self) -> None:
         address = self.driver.find_element(By.CSS_SELECTOR, "input[type='email']")
@@ -129,6 +130,12 @@ class fuz_browser:
         save_dir = OUTPUT_DIR
         if subdir == "@@RESERVED_AS_TITLE_LA":
             subdir = info[2]
+        elif subdir == "@@RESERVED_AS_BOOK_TITLE_LA":
+            tmpdir = info[2].split('\u3000')
+            subdir = tmpdir[0]
+            tmpdir = tmpdir[1:-1]
+            for td in tmpdir:
+                subdir = subdir + '\u3000' + td
         if subdir != "":
             save_dir = save_dir + "/" + subdir
             Path(save_dir).mkdir(parents=True, exist_ok=True)

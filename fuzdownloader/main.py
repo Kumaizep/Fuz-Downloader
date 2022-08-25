@@ -63,7 +63,7 @@ def main() -> None:
                             bcolors.ENDC,
                         )
                     else:
-                        fuz_web.download_book("#" + str(specified_book), "@@RESERVED_AS_TITLE_LA")
+                        fuz_web.download_book(subdir="@@RESERVED_AS_BOOK_TITLE_LA")
                 else:
                     fuz_web.download_book("#" + str(specified_book), "@@RESERVED_AS_TITLE_LA")
         # Handling "Normal" options.
