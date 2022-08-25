@@ -239,12 +239,20 @@ class fuz_browser:
         chap_elems = self.driver.find_elements(
             By.CSS_SELECTOR, "a[class^=Chapter_chapter]"
         )
+        chap_names = self.driver.find_elements(
+            By.CSS_SELECTOR, "h3[class^=Chapter_chapter__name]"
+        )
+        chap_subnames = self.driver.find_elements(
+            By.CSS_SELECTOR, "p[class^=Chapter_chapter__subName]"
+        )
         free_chaps = list()
         chap_count = 0
         for chap_elem in chap_elems:
             elem_text = chap_elem.text.split('\n')
             if "無料" in elem_text:
-                free_chaps.append([str(chap_count), elem_text[0]])
+                free_chaps.append(
+                    [str(chap_count), chap_names[chap_count].text + chap_subnames[chap_count].text]
+                )
             chap_count = chap_count + 1
 
         return free_chaps
