@@ -53,13 +53,17 @@ def main() -> None:
             specified_books = get_reader_url_select_result()
             for specified_book in specified_books:
                 # Jump to the specified page and detect if it is available
-                fuz_web.jump_to_reader(specified_book)
+                fuz_web.jump_to_manga_viewer(specified_book)
                 if fuz_web.driver.find_elements(By.CSS_SELECTOR, "[class^='__500']"):
-                    print(
-                        bcolors.WARNING,
-                        "[!] クエストキャンセル： " + str(specified_book) + " は一時的にご利用できません。",
-                        bcolors.ENDC,
-                    )
+                    fuz_web.jump_to_book_viewer(specified_book)
+                    if fuz_web.driver.find_elements(By.CSS_SELECTOR, "[class^='__500']"):
+                        print(
+                            bcolors.WARNING,
+                            "[!] クエストキャンセル： " + str(specified_book) + " は一時的にご利用できません。",
+                            bcolors.ENDC,
+                        )
+                    else:
+                        fuz_web.download_book("#" + str(specified_book), "@@RESERVED_AS_TITLE_LA")
                 else:
                     fuz_web.download_book("#" + str(specified_book), "@@RESERVED_AS_TITLE_LA")
         # Handling "Normal" options.

@@ -230,8 +230,13 @@ class fuz_browser:
         result = [[dn.text, di.text] for dn, di in zip(dailogs_name, dailogs_index)]
         return result
 
-    def jump_to_reader(self, book_id:int) -> None:
+    def jump_to_manga_viewer(self, book_id:int) -> None:
         book_url = "https://comic-fuz.com/manga/viewer/" + str(book_id)
+        self.driver.get(book_url)
+        time.sleep(1)
+
+    def jump_to_book_viewer(self, book_id:int) -> None:
+        book_url = "https://comic-fuz.com/book/viewer/" + str(book_id)
         self.driver.get(book_url)
         time.sleep(1)
 
