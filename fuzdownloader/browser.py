@@ -94,6 +94,7 @@ class fuz_browser:
 
     def jump_to_purchased(self) -> None:
         self.driver.get("https://comic-fuz.com/bookshelf")
+        time.sleep(1)
         option_lables = self.driver.find_elements(By.CSS_SELECTOR, "label")
         option_lables[2].click()
         time.sleep(1)
@@ -125,13 +126,40 @@ class fuz_browser:
         time.sleep(1)
 
     def download_book(self, mark="", subdir="") -> None:
-        info = self.load_book(mark)
+        title = self.get_book_title(mark)
+        save_dir = self.gen_save_dir(title[1], subdir)
+
+        if self.is_book_exist(save_dir, title[0]):
+            print(
+                "\r" + bcolors.OKCYAN, 
+                "[+]", title[0], "は既に存在します", "[ Download Skip ]"
+                , bcolors.ENDC
+            )
+            return
+
+        page_num = self.load_book(title[0])
         bookmarks = self.get_bookmarks()
+
+        make_pdf(save_dir, title[0], page_num, bookmarks)
+        shutil.rmtree(OUTPUT_DIR + "/" + "TEMP" + title[0])
+        print("\r" + bcolors.OKCYAN, "[+]", title[0], "[ Download Done ]", bcolors.ENDC)
+        exit_button = self.driver.find_element(
+            By.CSS_SELECTOR, "button[class^=ViewerHeader]"
+        )
+        exit_button.click()
+        time.sleep(2)
+
+    def get_book_title(self, mark: str) -> List[str]:
+        origin_title = self.driver.find_element(By.CSS_SELECTOR, "p[class^='ViewerHeader']").text
+        title = origin_title + mark
+        return [title, origin_title]
+
+    def gen_save_dir(self, origin_title: str, subdir: str) -> str:
         save_dir = OUTPUT_DIR
         if subdir == "@@RESERVED_AS_TITLE_LA":
-            subdir = info[2]
+            subdir = origin_title
         elif subdir == "@@RESERVED_AS_BOOK_TITLE_LA":
-            tmpdir = info[2].split('\u3000')
+            tmpdir = origin_title.split('\u3000')
             subdir = tmpdir[0]
             tmpdir = tmpdir[1:-1]
             for td in tmpdir:
@@ -139,21 +167,14 @@ class fuz_browser:
         if subdir != "":
             save_dir = save_dir + "/" + subdir
             Path(save_dir).mkdir(parents=True, exist_ok=True)
+        return save_dir
 
-        make_pdf(save_dir, info[0], int(info[1]), bookmarks)
-        shutil.rmtree(OUTPUT_DIR + "/" + "TEMP" + info[0])
-        print("\r" + bcolors.OKCYAN, "[+]", info[0], "[ Download Done ]", bcolors.ENDC)
-        exit_button = self.driver.find_element(
-            By.CSS_SELECTOR, "button[class^=ViewerHeader]"
-        )
-        exit_button.click()
-        time.sleep(2)
+    def is_book_exist(self, path: str, title: str) -> bool:
+        return check_pdf_exist(path, title + '.pdf')
 
-    def load_book(self, mark="", need_load=True) -> List[str]:
+    def load_book(self, title: str, need_load=True) -> int:
         page_num = self.init_book()
 
-        origin_title = self.driver.find_element(By.CSS_SELECTOR, "p[class^='ViewerHeader']").text
-        title = origin_title + mark
         save_dir = OUTPUT_DIR + "/" + "TEMP" + title
         Path(save_dir).mkdir(parents=True, exist_ok=True)
 
@@ -174,7 +195,7 @@ class fuz_browser:
                         Keys.ARROW_LEFT
                     )
                 need_turning = not need_turning
-        return [title, str(page_num), origin_title]
+        return page_num
 
     def init_book(self) -> int:
         page = self.driver.find_element(

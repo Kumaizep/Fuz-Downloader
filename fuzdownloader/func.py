@@ -4,6 +4,8 @@ from os.path import exists
 
 from .param import *
 
+def check_pdf_exist(path: str, filename: str) -> bool:
+    return exists(path + '/' + filename)
 
 def get_select_result(min_id: int, max_id: int) -> List[int]:
     need_select = True
