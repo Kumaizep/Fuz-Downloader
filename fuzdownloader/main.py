@@ -42,7 +42,9 @@ def main() -> None:
                         bcolors.ENDC,
                     )
                 else:
-                    book_title = fuz_web.driver.find_element(By.CSS_SELECTOR, "h1[class^='title_detail_introduction__name']").text
+                    book_title = fuz_web.driver.find_element(
+                        By.CSS_SELECTOR, "h1[class^='title_detail_introduction__name']"
+                    ).text
                     chapters = fuz_web.get_free_chapter()
                     for chapter in chapters:
                         fuz_web.jump_to_specified_manga(specified_book)
@@ -56,7 +58,9 @@ def main() -> None:
                 fuz_web.jump_to_manga_viewer(specified_book)
                 if fuz_web.driver.find_elements(By.CSS_SELECTOR, "[class^='__500']"):
                     fuz_web.jump_to_book_viewer(specified_book)
-                    if fuz_web.driver.find_elements(By.CSS_SELECTOR, "[class^='__500']"):
+                    if fuz_web.driver.find_elements(
+                        By.CSS_SELECTOR, "[class^='__500']"
+                    ):
                         print(
                             bcolors.WARNING,
                             "[!] クエストキャンセル： " + str(specified_book) + " は一時的にご利用できません。",
@@ -65,11 +69,15 @@ def main() -> None:
                     else:
                         fuz_web.download_book(subdir="@@RESERVED_AS_BOOK_TITLE_LA")
                 else:
-                    fuz_web.download_book("#" + str(specified_book), "@@RESERVED_AS_TITLE_LA")
+                    fuz_web.download_book(
+                        "#" + str(specified_book), "@@RESERVED_AS_TITLE_LA"
+                    )
         # Handling "Normal" options.
         else:
             picked_issues = fuz_web.issue_selector(picked_book, skip_sele)
-            book_title = fuz_web.driver.find_element(By.CSS_SELECTOR, "h1[class^='magazine_issue_detail']").text
+            book_title = fuz_web.driver.find_element(
+                By.CSS_SELECTOR, "h1[class^='magazine_issue_detail']"
+            ).text
             for picked_issue in picked_issues:
                 fuz_web.jump_to_picked_issue(picked_issue)
                 fuz_web.download_book(subdir=book_title)

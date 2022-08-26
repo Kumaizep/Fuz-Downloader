@@ -14,6 +14,7 @@ from .param import *
 from .func import *
 from .mkpdf import *
 
+
 class fuz_browser:
     """docstring for fuz_browser"""
 
@@ -131,9 +132,9 @@ class fuz_browser:
 
         if self.is_book_exist(save_dir, title[0]):
             print(
-                "\r" + bcolors.OKCYAN, 
-                "[+]", title[0], "は既に存在します", "[ Download Skip ]"
-                , bcolors.ENDC
+                "\r" + bcolors.OKCYAN,
+                "[+]", title[0], "は既に存在します [ Download Skip ]",
+                bcolors.ENDC
             )
             return
 
@@ -150,7 +151,9 @@ class fuz_browser:
         time.sleep(2)
 
     def get_book_title(self, mark: str) -> List[str]:
-        origin_title = self.driver.find_element(By.CSS_SELECTOR, "p[class^='ViewerHeader']").text
+        origin_title = self.driver.find_element(
+            By.CSS_SELECTOR, "p[class^='ViewerHeader']"
+        ).text
         title = origin_title + mark
         return [title, origin_title]
 
@@ -159,18 +162,18 @@ class fuz_browser:
         if subdir == "@@RESERVED_AS_TITLE_LA":
             subdir = origin_title
         elif subdir == "@@RESERVED_AS_BOOK_TITLE_LA":
-            tmpdir = origin_title.split('\u3000')
+            tmpdir = origin_title.split("\u3000")
             subdir = tmpdir[0]
             tmpdir = tmpdir[1:-1]
             for td in tmpdir:
-                subdir = subdir + '\u3000' + td
+                subdir = subdir + "\u3000" + td
         if subdir != "":
             save_dir = save_dir + "/" + subdir
             Path(save_dir).mkdir(parents=True, exist_ok=True)
         return save_dir
 
     def is_book_exist(self, path: str, title: str) -> bool:
-        return check_pdf_exist(path, title + '.pdf')
+        return check_pdf_exist(path, title + ".pdf")
 
     def load_book(self, title: str, need_load=True) -> int:
         page_num = self.init_book()
@@ -258,12 +261,12 @@ class fuz_browser:
         result = [[dn.text, di.text] for dn, di in zip(dailogs_name, dailogs_index)]
         return result
 
-    def jump_to_manga_viewer(self, book_id:int) -> None:
+    def jump_to_manga_viewer(self, book_id: int) -> None:
         book_url = "https://comic-fuz.com/manga/viewer/" + str(book_id)
         self.driver.get(book_url)
         time.sleep(1)
 
-    def jump_to_book_viewer(self, book_id:int) -> None:
+    def jump_to_book_viewer(self, book_id: int) -> None:
         book_url = "https://comic-fuz.com/book/viewer/" + str(book_id)
         self.driver.get(book_url)
         time.sleep(1)
@@ -281,16 +284,19 @@ class fuz_browser:
         free_chaps = list()
         chap_count = 0
         for chap_elem in chap_elems:
-            elem_text = chap_elem.text.split('\n')
+            elem_text = chap_elem.text.split("\n")
             if "無料" in elem_text:
                 free_chaps.append(
-                    [str(chap_count), chap_names[chap_count].text + chap_subnames[chap_count].text]
+                    [
+                        str(chap_count),
+                        chap_names[chap_count].text + chap_subnames[chap_count].text,
+                    ]
                 )
             chap_count = chap_count + 1
 
         return free_chaps
 
-    def jump_to_specified_manga(self, manga_id:int) -> None:
+    def jump_to_specified_manga(self, manga_id: int) -> None:
         book_url = "https://comic-fuz.com/manga/" + str(manga_id)
         self.driver.get(book_url)
         time.sleep(1)
@@ -301,6 +307,3 @@ class fuz_browser:
         )
         read_button[chapter_id].click()
         time.sleep(1)
-
-
-

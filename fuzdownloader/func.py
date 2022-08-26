@@ -4,8 +4,10 @@ from os.path import exists
 
 from .param import *
 
+
 def check_pdf_exist(path: str, filename: str) -> bool:
-    return exists(path + '/' + filename)
+    return exists(path + "/" + filename)
+
 
 def get_select_result(min_id: int, max_id: int) -> List[int]:
     need_select = True
@@ -47,6 +49,7 @@ def get_reader_url_select_result() -> List[int]:
             print(bcolors.WARNING, "[!] 指定されている形式で入力してください。", bcolors.ENDC)
     result.sort()
     return result
+
 
 def get_manga_url_select_result() -> List[int]:
     print("<その他ーURLでダウンロード>")
