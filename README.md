@@ -7,7 +7,7 @@ For first time use:
 
 - The bot program is written in Python and tested in version `3.10.5`.It is recommended to run with a version no earlier than this one.
 
-- This tool is based on the `selenium`, `webdriver_manager`, `img2pdf`, and `pypdf2` modules.
+- This tool is based on the `selenium`, `webdriver_manager`, `img2pdf`, `rich`, `blessed`, `inquirer`, `PyYAML`, and `pypdf2` modules.
 
 - We Poetry to manage dependency, please confirm that Poetry has been installed.
 	- One way to install Poetry is by using `pip`:

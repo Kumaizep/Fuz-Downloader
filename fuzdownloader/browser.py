@@ -12,8 +12,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
-
 from .console import *
+from .context import *
 from .func import *
 from .mkpdf import *
 from .param import *
@@ -25,7 +25,7 @@ class fuz_browser:
 
     def __init__(self) -> None:
         rich.cnsl.rule(
-            "[bold sky_blue3]< " + "Fuz-Downloader v0.1.0" + " >[/bold sky_blue3]",
+            "[bold sky_blue3]" + context.browser_t("mainTitle") + "[/bold sky_blue3]",
             style="sky_blue3",
         )
         options = Options()
@@ -44,11 +44,11 @@ class fuz_browser:
         self.try_login()
         while self.is_alert_present() or self.is_empty_input():
             self.driver.refresh()
-            rich.cnsl.print("[!] メールアドレス、もしくはパスワードを間違えています。再入力してください：", style="orange1")
-            self.account["address"] = input("メールアドレス： ")
-            self.account["password"] = input("パスワード： ")
+            rich.cnsl.print(SWARNING + context.browser_t("accountInfoError"), style="orange1")
+            self.account["address"] = input(context.browser_t("accountAddress"))
+            self.account["password"] = input(context.browser_t("accountPassword"))
             self.try_login()
-        rich.cnsl.print("[+] ログインが完了しました。", style="sky_blue3")
+        rich.cnsl.print(SNORMAL + context.browser_t("loginSuccess"), style="sky_blue3")
         save_account_info(self.account)
         time.sleep(1)
 
@@ -68,7 +68,7 @@ class fuz_browser:
                 alert.accept()
                 return True
             else:
-                rich.cnsl.print("[+] 少々お待ちください。", style="sky_blue2")
+                rich.cnsl.print(SNORMAL + context.browser_t("waitAMoment"), style="sky_blue2")
                 alert.accept()
                 time.sleep(10)
                 self.try_login()
@@ -102,19 +102,20 @@ class fuz_browser:
         books_title = self.find_elems_by_css("h3")
         books_num = len(books_title)
         books_title_list = [(books_title[1].text, i) for i in range(books_num)]
-        books_title_list.append(("その他： リーダーページのURLでダウンロード", books_num))
-        books_title_list.append(("その他： 指定されたURLのすべての無料単話", books_num + 1))
+        books_title_list.append((context.browser_t("otherViewerUrl"), books_num))
+        books_title_list.append((context.browser_t("otherCatalogUrl"), books_num + 1))
 
         if skip:
             rich.cnsl.print(
-                "[+] オートセレクター： " + books_title_list[0][0], style="sky_blue3"
+                SNORMAL + context.browser_t("autoSelector") + books_title_list[0][0], 
+                style="sky_blue3"
             )
             return [0]
         else:
             questions = [
                 inquirer.Checkbox(
                     name="picked_books",
-                    message="ダウンロードしたいものを選択してください",
+                    message=context.browser_t("chooseDownloadItem"),
                     choices=books_title_list,
                 )
             ]
@@ -138,13 +139,13 @@ class fuz_browser:
         issues_title_list = [(issues_title[i].text, i) for i in range(3)]
 
         if skip:
-            csnl.print("[+] セレクター： ( 0 )", style="sky_blue3")
+            csnl.print("[+] セレクター： " + issues_title[0], style="sky_blue3")
             return [0]
         else:
             questions = [
                 inquirer.Checkbox(
                     name="picked_issues",
-                    message="ダウンロードした刊号を選択してください",
+                    message=context.browser_t("chooseDownloadIssue"),
                     choices=issues_title_list,
                 )
             ]
@@ -169,7 +170,7 @@ class fuz_browser:
         rich.cnsl.print("[+] " + title[0][:60] + "：", style="sky_blue3")
 
         if self.is_book_exist(save_dir, title[0]):
-            rich.cnsl.print("　　PDFは既に存在します。[ Skip ]", style="sky_blue3")
+            rich.cnsl.print(SINDENT + context.browser_t("pdfExisted"), style="sky_blue3")
             return
 
         page_num = self.load_book(title[0])
@@ -181,13 +182,11 @@ class fuz_browser:
 
         rich.update_single_progress(content="Done")
         rich.terminal_single_progress()
-        rich.cnsl.print("　　PDFは ", style="sky_blue3", end="")
+        styled_full_path = "[light_steel_blue underline]" + full_path + "[/light_steel_blue underline]"
         rich.cnsl.print(
-            "[light_steel_blue]" + full_path + "[/light_steel_blue]",
-            style="underline",
-            end="",
+            SINDENT + context.browser_t("pdfSaved").format(save_path=styled_full_path), 
+            style="sky_blue3"
         )
-        rich.cnsl.print(" に保存されました。", style="sky_blue3")
 
         exit_button = self.find_elem_by_css("button[class^=ViewerHeader]")
         exit_button.click()

@@ -1,0 +1,31 @@
+main:
+    500NotFound: 'クエストキャンセル： {urlNumber} は一時的にご利用できません。'
+    questDone: 'クエスト完了'
+
+browser:
+    mainTitle: '< Fuz-Downloader v0.1.0 >'
+    accountInfoError: 'メールアドレス、もしくはパスワードを間違えています。再入力してください。'
+    accountAddress: 'メールアドレス： '
+    accountPassword: 'パスワード： '
+    loginSuccess: 'ログインが完了しました。'
+    waitAMoment: '少々お待ちください。'
+    otherViewerUrl: 'その他： リーダーページのURLでダウンロード'
+    otherCatalogUrl: 'その他： 指定されたURLのすべての無料単話'
+    autoSelector: 'オートセレクター： '
+    chooseDownloadItem: 'ダウンロードしたいものを選択してください'
+    chooseDownloadIssue: 'ダウンロードした刊号を選択してください'
+    pdfExisted: 'PDFは既に存在します。[ Skip ]'
+    pdfSaved: 'PDFは {save_path} に保存されました。'
+
+func:
+    keyInViewerUrl: 'ダウンロードしたい本のURLの末尾にある番号を入力してください。'
+    keyInViewerUrlExample: '例えば、「ご注文はうさぎですか？１巻第０話」のURLは「https://comic-fuz.com/manga/viewer/2443」なので、ダウンロードするときは「2443」と入力してください。スペースで区切る。'
+    keyInViewerUrlTitle: '< その他： リーダーページのURLでダウンロード >'
+    keyInCatalogUrl: 'ダウンロードしたい作品のURLの末尾にある番号を入力してください。'
+    keyInCatalogUrlExample: '例えば、「ご注文はうさぎですか？」のURLは「https://comic-fuz.com/manga/183」なので、ダウンロードするときは「183」と入力してください。スペースで区切る。'
+    keyInCatalogUrlTitle: 'その他： 指定されたURLのすべての無料単話'
+    urlNumber: 'URL番号： '
+    invalidChoice: '無効な選択： '
+    invalidFormat: '指定されている形式で入力してください。'
+    accountAddress: 'メールアドレス： '
+    accountPassword: 'パスワード： '

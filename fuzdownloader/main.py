@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 
 from .browser import *
 from .console import *
+from .context import *
 from .param import *
 
 
@@ -12,6 +13,9 @@ def main() -> None:
     skip_sele = False
     if len(sys.argv) >= 2 and sys.argv[1] == "new":
         skip_sele = True
+    if len(sys.argv) >= 3 and sys.argv[1] == "set-lang":
+        context.set_languague(sys.argv[2])
+
 
     Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 
@@ -35,7 +39,7 @@ def main() -> None:
                 fuz_web.jump_to_specified_manga(specified_book)
                 if not fuz_web.is_page_exist():
                     rich.cnsl.print(
-                        "[!] クエストキャンセル： " + str(specified_book) + " は一時的にご利用できません。",
+                        SWARNING + context.main_t("500NotFound").format(urlNumber=specified_book),
                         style="orange1",
                     )
                 else:
@@ -57,7 +61,7 @@ def main() -> None:
                     fuz_web.jump_to_book_viewer(specified_book)
                     if not fuz_web.is_page_exist():
                         rich.cnsl.print(
-                            "[!] クエストキャンセル： " + str(specified_book) + " は一時的にご利用できません。",
+                            SWARNING + context.main_t("500NotFound").format(urlNumber=specified_book),
                             style="orange1",
                         )
                     else:
@@ -77,6 +81,6 @@ def main() -> None:
                 fuz_web.download_book(subdir=book_title)
         rich.cnsl.print("")
 
-    rich.cnsl.print("[+] クエスト完了", style="sky_blue3")
+    rich.cnsl.print(SNORMAL + context.main_t("questDone"), style="sky_blue3")
 
     fuz_web.driver.quit()
