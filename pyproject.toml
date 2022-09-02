@@ -11,6 +11,10 @@ webdriver-manager = "^3.8.1"
 img2pdf = "^0.4.4"
 PyPDF2 = "^2.5.0"
 fpdf = "^1.7.2"
+rich = "^12.5.1"
+blessed = "^1.19.1"
+inquirer = "^2.10.0"
+PyYAML = "^6.0"
 
 [tool.poetry.dev-dependencies]
 

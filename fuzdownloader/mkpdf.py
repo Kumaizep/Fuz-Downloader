@@ -3,11 +3,12 @@ from typing import List
 from PyPDF2 import PdfFileWriter, PdfFileReader
 import img2pdf
 
+from .console import *
 from .param import *
 
 
 def add_bookmark(path: str, bookmarks: List[List[str]], title: str) -> None:
-    print("\r" + bcolors.OKBLUE, "[-]", title, "[marking]", bcolors.ENDC, end="")
+    rich.update_single_progress(content="Marking")
     reader = PdfFileReader(path, strict=False)
     writer = PdfFileWriter()
     for page in range(reader.numPages):
@@ -22,7 +23,6 @@ def add_bookmark(path: str, bookmarks: List[List[str]], title: str) -> None:
 def make_pdf(
     save_dir: str, title: str, page_num: int, bookmarks=[["-1", "-1"]]
 ) -> None:
-    print("\r" + bcolors.OKBLUE, "[-]", title, "[converting]", bcolors.ENDC, end="")
     img_dir = OUTPUT_DIR + "/" + "TEMP" + title
     pdf_path = save_dir + "/" + title + ".pdf"
     images = [img_dir + "/" + str(pn) + ".jpeg" for pn in range(page_num)]

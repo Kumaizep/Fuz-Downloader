@@ -1,8 +1,10 @@
-from typing import List
-import time
-import shutil
 import base64
+import inquirer
+import os
+import shutil
+import time
 
+from typing import List
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -10,15 +12,22 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
-from .param import *
+
+from .console import *
 from .func import *
 from .mkpdf import *
+from .param import *
+from .theme import *
 
 
 class fuz_browser:
     """docstring for fuz_browser"""
 
     def __init__(self) -> None:
+        rich.cnsl.rule(
+            "[bold sky_blue3]< " + "Fuz-Downloader v0.1.0" + " >[/bold sky_blue3]",
+            style="sky_blue3",
+        )
         options = Options()
         options.add_argument("--headless")
         if shutil.which("chromedriver") is None:
@@ -35,37 +44,32 @@ class fuz_browser:
         self.try_login()
         while self.is_alert_present() or self.is_empty_input():
             self.driver.refresh()
-            print(
-                bcolors.WARNING,
-                "[!] メールアドレス、もしくはパスワードを間違えています。再入力してください：",
-                bcolors.ENDC,
-            )
-            self.account[0] = input("メールアドレス： ")
-            self.account[1] = input("パスワード： ")
+            rich.cnsl.print("[!] メールアドレス、もしくはパスワードを間違えています。再入力してください：", style="orange1")
+            self.account["address"] = input("メールアドレス： ")
+            self.account["password"] = input("パスワード： ")
             self.try_login()
-        print(bcolors.OKCYAN, "[+] ログインが完了しました。", bcolors.ENDC)
+        rich.cnsl.print("[+] ログインが完了しました。", style="sky_blue3")
         save_account_info(self.account)
         time.sleep(1)
 
     def try_login(self) -> None:
-        address = self.driver.find_element(By.CSS_SELECTOR, "input[type='email']")
-        password = self.driver.find_element(By.CSS_SELECTOR, "input[type='password']")
-        signin_buttom = self.driver.find_element(
-            By.CSS_SELECTOR, "button[class^='signin_form']"
-        )
-        address.send_keys(self.account[0])
-        password.send_keys(self.account[1])
+        address = self.find_elem_by_css("input[type='email']")
+        password = self.find_elem_by_css("input[type='password']")
+        signin_buttom = self.find_elem_by_css("button[class^='signin_form']")
+        address.send_keys(self.account["address"])
+        password.send_keys(self.account["password"])
         signin_buttom.click()
         time.sleep(2)
 
     def is_alert_present(self):
         try:
             alert = self.driver.switch_to.alert
-            if self.driver.switch_to.alert.text == "メールアドレス、もしくはパスワードを間違えています。":
+            if alert.text == "メールアドレス、もしくはパスワードを間違えています。":
                 alert.accept()
                 return True
             else:
-                print(bcolors.OKCYAN, "[+] 少々お待ちください。", bcolors.ENDC)
+                rich.cnsl.print("[+] 少々お待ちください。", style="sky_blue2")
+                alert.accept()
                 time.sleep(10)
                 self.try_login()
                 return self.is_alert_present()
@@ -73,51 +77,82 @@ class fuz_browser:
             return False
 
     def is_empty_input(self):
-        if self.account[0] == "" or self.account[1] == "":
+        if self.account["address"] == "" or self.account["password"] == "":
             return True
         else:
             return False
 
+    # def book_selector(self, skip: bool) -> List[int]:
+    #     self.jump_to_purchased()
+    #     books_title = self.find_elems_by_css("h3")
+    #     count = 0
+    #     for book_title in books_title:
+    #         print("(", count, ")", book_title.text)
+    #         count += 1
+    #     print("(", count, ")", "その他： リーダーページのURLでダウンロード")
+    #     print("(", count + 1, ")", "その他： 指定されたURLのすべての無料単話")
+    #     if skip:
+    #         rich.cnsl.print("[+] セレクター： ( 0 )", style="sky_blue3")
+    #         return [0]
+    #     else:
+    #         return get_select_result(0, count + 1)
+
     def book_selector(self, skip: bool) -> List[int]:
         self.jump_to_purchased()
-        books_title = self.driver.find_elements(By.CSS_SELECTOR, "h3")
-        count = 0
-        for book_title in books_title:
-            print("(", count, ")", book_title.text)
-            count += 1
-        print("(", count, ")", "その他： リーダーページのURLでダウンロード")
-        print("(", count + 1, ")", "その他： 指定されたURLのすべての無料単話")
+        books_title = self.find_elems_by_css("h3")
+        books_num = len(books_title)
+        books_title_list = [(books_title[1].text, i) for i in range(books_num)]
+        books_title_list.append(("その他： リーダーページのURLでダウンロード", books_num))
+        books_title_list.append(("その他： 指定されたURLのすべての無料単話", books_num + 1))
+
         if skip:
-            print(bcolors.OKCYAN, "[+] セレクター： ( 0 )", bcolors.ENDC)
+            rich.cnsl.print(
+                "[+] オートセレクター： " + books_title_list[0][0], style="sky_blue3"
+            )
             return [0]
         else:
-            return get_select_result(0, count + 1)
+            questions = [
+                inquirer.Checkbox(
+                    name="picked_books",
+                    message="ダウンロードしたいものを選択してください",
+                    choices=books_title_list,
+                )
+            ]
+            return inquirer.prompt(questions, theme=DefaultTheme())["picked_books"]
 
     def jump_to_purchased(self) -> None:
         self.driver.get("https://comic-fuz.com/bookshelf")
         time.sleep(1)
-        option_lables = self.driver.find_elements(By.CSS_SELECTOR, "label")
+        option_lables = self.find_elems_by_css("label")
         option_lables[2].click()
         time.sleep(1)
 
     def issue_selector(self, book_id: int, skip: bool) -> List[int]:
         self.jump_to_picked_book(book_id)
-        title = self.driver.find_element(By.CSS_SELECTOR, "h1")
-        print("<", title.text.split()[0], ">")
-        issues_title = self.driver.find_elements(By.CSS_SELECTOR, "h2")
-        for count in range(3):
-            print("(", count, ")", issues_title[count].text)
+        title = self.find_elem_by_css("h1")
+        rich.csnl.rule(
+            "[bold sky_blue3]< " + title.text.split()[0] + " >[/bold sky_blue3]",
+            style="sky_blue3",
+        )
+        issues_title = self.find_elems_by_css("h2")
+        issues_title_list = [(issues_title[i].text, i) for i in range(3)]
+
         if skip:
-            print(bcolors.OKCYAN, "[+] セレクター： ( 0 )", bcolors.ENDC)
+            csnl.print("[+] セレクター： ( 0 )", style="sky_blue3")
             return [0]
         else:
-            return get_select_result(0, 2)
+            questions = [
+                inquirer.Checkbox(
+                    name="picked_issues",
+                    message="ダウンロードした刊号を選択してください",
+                    choices=issues_title_list,
+                )
+            ]
+            return inquirer.prompt(questions, theme=DefaultTheme())["picked_issues"]
 
     def jump_to_picked_book(self, book_id: int) -> None:
         self.jump_to_purchased()
-        purchased_books = self.driver.find_elements(
-            By.CSS_SELECTOR, "a[class^='Magazine']"
-        )
+        purchased_books = self.find_elems_by_css("a[class^='Magazine']")
         purchased_books[book_id].click()
         time.sleep(1)
 
@@ -129,31 +164,37 @@ class fuz_browser:
     def download_book(self, mark="", subdir="") -> None:
         title = self.get_book_title(mark)
         save_dir = self.gen_save_dir(title[1], subdir)
+        full_path = os.path.abspath(os.getcwd()) + save_dir[1:]
+
+        rich.cnsl.print("[+] " + title[0][:60] + "：", style="sky_blue3")
 
         if self.is_book_exist(save_dir, title[0]):
-            print(
-                "\r" + bcolors.OKCYAN,
-                "[+]", title[0], "は既に存在します [ Download Skip ]",
-                bcolors.ENDC
-            )
+            rich.cnsl.print("　　PDFは既に存在します。[ Skip ]", style="sky_blue3")
             return
 
         page_num = self.load_book(title[0])
+        rich.update_single_progress(content="Processing")
         bookmarks = self.get_bookmarks()
 
         make_pdf(save_dir, title[0], page_num, bookmarks)
         shutil.rmtree(OUTPUT_DIR + "/" + "TEMP" + title[0])
-        print("\r" + bcolors.OKCYAN, "[+]", title[0], "[ Download Done ]", bcolors.ENDC)
-        exit_button = self.driver.find_element(
-            By.CSS_SELECTOR, "button[class^=ViewerHeader]"
+
+        rich.update_single_progress(content="Done")
+        rich.terminal_single_progress()
+        rich.cnsl.print("　　PDFは ", style="sky_blue3", end="")
+        rich.cnsl.print(
+            "[light_steel_blue]" + full_path + "[/light_steel_blue]",
+            style="underline",
+            end="",
         )
+        rich.cnsl.print(" に保存されました。", style="sky_blue3")
+
+        exit_button = self.find_elem_by_css("button[class^=ViewerHeader]")
         exit_button.click()
         time.sleep(2)
 
     def get_book_title(self, mark: str) -> List[str]:
-        origin_title = self.driver.find_element(
-            By.CSS_SELECTOR, "p[class^='ViewerHeader']"
-        ).text
+        origin_title = self.find_elem_by_css("p[class^='ViewerHeader']").text
         title = origin_title + mark
         return [title, origin_title]
 
@@ -182,14 +223,10 @@ class fuz_browser:
         Path(save_dir).mkdir(parents=True, exist_ok=True)
 
         if need_load:
+            rich.create_single_progress(content="Downloading", total=page_num)
             need_turning = True
             for pn in range(page_num):
-                print(
-                    "\r" + bcolors.OKBLUE,
-                    "[-] " + title + " [ " + str(pn + 1) + " / " + str(page_num) + " ]",
-                    bcolors.ENDC,
-                    end="",
-                )
+                rich.advance_single_progress()
                 curr_page_uri = self.get_page_uri(pn)
                 bytes = self.get_file_content_chrome(curr_page_uri)
                 save_file(save_dir, pn, bytes)
@@ -201,14 +238,10 @@ class fuz_browser:
         return page_num
 
     def init_book(self) -> int:
-        page = self.driver.find_element(
-            By.CSS_SELECTOR, "p[class^='ViewerFooter_footer__page']"
-        )
+        page = self.find_elem_by_css("p[class^='ViewerFooter_footer__page']")
         while int(page.text[0:2]) != 1:
             self.driver.find_element(By.XPATH, "//body").send_keys(Keys.ARROW_RIGHT)
-            page = self.driver.find_element(
-                By.CSS_SELECTOR, "p[class^='ViewerFooter_footer__page']"
-            )
+            page = self.find_elem_by_css("p[class^='ViewerFooter_footer__page']")
         page_num = int(page.text[4:]) - 1
         return page_num
 
@@ -252,11 +285,9 @@ class fuz_browser:
         except:
             return [("-1", "-1")]
         self.driver.execute_script("arguments[0].click();", catalog)
-        dailogs_name = self.driver.find_elements(
-            By.CSS_SELECTOR, "p[class^=ViewerIndexModal_dialog__name]"
-        )
-        dailogs_index = self.driver.find_elements(
-            By.CSS_SELECTOR, "p[class^=ViewerIndexModal_dialog__index]"
+        dailogs_name = self.find_elems_by_css("p[class^=ViewerIndexModal_dialog__name]")
+        dailogs_index = self.find_elems_by_css(
+            "p[class^=ViewerIndexModal_dialog__index]"
         )
         result = [[dn.text, di.text] for dn, di in zip(dailogs_name, dailogs_index)]
         return result
@@ -272,17 +303,11 @@ class fuz_browser:
         time.sleep(1)
 
     def get_free_chapter(self) -> List[List[str]]:
-        chap_elems = self.driver.find_elements(
-            By.CSS_SELECTOR, "a[class^=Chapter_chapter]"
-        )
-        chap_names = self.driver.find_elements(
-            By.CSS_SELECTOR, "h3[class^=Chapter_chapter__name]"
-        )
-        chap_subnames = self.driver.find_elements(
-            By.CSS_SELECTOR, "p[class^=Chapter_chapter__subName]"
-        )
-        free_chaps = list()
+        chap_elems = self.find_elems_by_css("a[class^=Chapter_chapter]")
+        chap_names = self.find_elems_by_css("h3[class^=Chapter_chapter__name]")
+        chap_subnames = self.find_elems_by_css("p[class^=Chapter_chapter__subName]")
         chap_count = 0
+        free_chaps = list()
         for chap_elem in chap_elems:
             elem_text = chap_elem.text.split("\n")
             if "無料" in elem_text:
@@ -302,8 +327,18 @@ class fuz_browser:
         time.sleep(1)
 
     def jump_to_picked_chapter(self, chapter_id: int) -> None:
-        read_button = self.driver.find_elements(
-            By.CSS_SELECTOR, "a[class^=Chapter_chapter]"
-        )
+        read_button = self.find_elems_by_css("a[class^=Chapter_chapter]")
         read_button[chapter_id].click()
         time.sleep(1)
+
+    def is_page_exist(self) -> bool:
+        if self.find_elems_by_css("[class^='__500']"):
+            return False
+        else:
+            return True
+
+    def find_elem_by_css(self, css_selector: str):
+        return self.driver.find_element(By.CSS_SELECTOR, css_selector)
+
+    def find_elems_by_css(self, css_selector: str) -> List:
+        return self.driver.find_elements(By.CSS_SELECTOR, css_selector)

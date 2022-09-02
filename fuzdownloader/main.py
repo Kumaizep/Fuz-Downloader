@@ -2,9 +2,9 @@ import sys
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from pathlib import Path
 
 from .browser import *
+from .console import *
 from .param import *
 
 
@@ -25,9 +25,7 @@ def main() -> None:
     # Potential bug: comics purchased with gold coins may cause loading errors if
     #                the interface is different from the monthly magazine interface.
     picked_books = fuz_web.book_selector(skip_sele)
-    pur_books_num = len(
-        fuz_web.driver.find_elements(By.CSS_SELECTOR, "a[class^='Magazine']")
-    )
+    pur_books_num = len(fuz_web.find_elems_by_css("a[class^='Magazine']"))
     for picked_book in picked_books:
         # Handling the "Other: all free chapters of specified url" option.
         if picked_book == pur_books_num + 1:
@@ -35,15 +33,14 @@ def main() -> None:
             for specified_book in specified_books:
                 # Jump to the specified page and detect if it is available
                 fuz_web.jump_to_specified_manga(specified_book)
-                if fuz_web.driver.find_elements(By.CSS_SELECTOR, "[class^='__500']"):
-                    print(
-                        bcolors.WARNING,
+                if not fuz_web.is_page_exist():
+                    rich.cnsl.print(
                         "[!] クエストキャンセル： " + str(specified_book) + " は一時的にご利用できません。",
-                        bcolors.ENDC,
+                        style="orange1",
                     )
                 else:
-                    book_title = fuz_web.driver.find_element(
-                        By.CSS_SELECTOR, "h1[class^='title_detail_introduction__name']"
+                    book_title = fuz_web.find_elem_by_css(
+                        "h1[class^='title_detail_introduction__name']"
                     ).text
                     chapters = fuz_web.get_free_chapter()
                     for chapter in chapters:
@@ -56,15 +53,12 @@ def main() -> None:
             for specified_book in specified_books:
                 # Jump to the specified page and detect if it is available
                 fuz_web.jump_to_manga_viewer(specified_book)
-                if fuz_web.driver.find_elements(By.CSS_SELECTOR, "[class^='__500']"):
+                if not fuz_web.is_page_exist():
                     fuz_web.jump_to_book_viewer(specified_book)
-                    if fuz_web.driver.find_elements(
-                        By.CSS_SELECTOR, "[class^='__500']"
-                    ):
-                        print(
-                            bcolors.WARNING,
+                    if not fuz_web.is_page_exist():
+                        rich.cnsl.print(
                             "[!] クエストキャンセル： " + str(specified_book) + " は一時的にご利用できません。",
-                            bcolors.ENDC,
+                            style="orange1",
                         )
                     else:
                         fuz_web.download_book(subdir="@@RESERVED_AS_BOOK_TITLE_LA")
@@ -75,13 +69,14 @@ def main() -> None:
         # Handling "Normal" options.
         else:
             picked_issues = fuz_web.issue_selector(picked_book, skip_sele)
-            book_title = fuz_web.driver.find_element(
-                By.CSS_SELECTOR, "h1[class^='magazine_issue_detail']"
+            book_title = fuz_web.find_elems_by_css(
+                "h1[class^='magazine_issue_detail']"
             ).text
             for picked_issue in picked_issues:
                 fuz_web.jump_to_picked_issue(picked_issue)
                 fuz_web.download_book(subdir=book_title)
+        rich.cnsl.print("")
 
-    print(bcolors.OKCYAN, "[+] クエスト完了", bcolors.ENDC)
+    rich.cnsl.print("[+] クエスト完了", style="sky_blue3")
 
     fuz_web.driver.quit()
