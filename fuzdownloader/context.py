@@ -2,6 +2,7 @@ import yaml
 
 from .param import *
 
+
 class Context:
     def __init__(self) -> None:
         self.text = None
@@ -22,7 +23,9 @@ class Context:
             with open(DATA_DIR + "/context-" + language + ".yaml", "r") as stream:
                 self.text = yaml.load(stream, Loader=yaml.FullLoader)
         except:
-            print("[x] Error: Read " + DATA_DIR + "/context-" + language + ".yaml failed")
+            print(
+                "[x] Error: Read " + DATA_DIR + "/context-" + language + ".yaml failed"
+            )
             raise
 
     def set_languague(self, language) -> None:

@@ -20,6 +20,7 @@ from rich.progress import (
 from .context import *
 from .param import *
 
+
 class RichConsole:
     def __init__(self) -> None:
         self.cnsl = Console()

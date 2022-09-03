@@ -2,6 +2,7 @@ import sys
 from .context import *
 from .downloader import *
 
+
 def main() -> None:
     skip_sele = False
     if len(sys.argv) >= 2 and sys.argv[1] == "new":
@@ -11,4 +12,3 @@ def main() -> None:
 
     fuzdl = fuz_downloader()
     fuzdl.run(skip_sele)
-   

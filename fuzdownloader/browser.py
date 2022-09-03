@@ -44,7 +44,9 @@ class fuz_browser:
         self.try_login()
         while self.is_alert_present() or self.is_empty_input():
             self.driver.refresh()
-            rich.cnsl.print(SWARNING + context.browser_t("accountInfoError"), style="orange1")
+            rich.cnsl.print(
+                SWARNING + context.browser_t("accountInfoError"), style="orange1"
+            )
             self.account["address"] = input(context.browser_t("accountAddress"))
             self.account["password"] = input(context.browser_t("accountPassword"))
             self.try_login()
@@ -68,7 +70,9 @@ class fuz_browser:
                 alert.accept()
                 return True
             else:
-                rich.cnsl.print(SNORMAL + context.browser_t("waitAMoment"), style="sky_blue2")
+                rich.cnsl.print(
+                    SNORMAL + context.browser_t("waitAMoment"), style="sky_blue2"
+                )
                 alert.accept()
                 time.sleep(10)
                 self.try_login()
@@ -107,8 +111,8 @@ class fuz_browser:
 
         if skip:
             rich.cnsl.print(
-                SNORMAL + context.browser_t("autoSelector") + books_title_list[0][0], 
-                style="sky_blue3"
+                SNORMAL + context.browser_t("autoSelector") + books_title_list[0][0],
+                style="sky_blue3",
             )
             return [0]
         else:
@@ -170,7 +174,9 @@ class fuz_browser:
         rich.cnsl.print("[+] " + title[0][:60] + "：", style="sky_blue3")
 
         if self.is_book_exist(save_dir, title[0]):
-            rich.cnsl.print(SINDENT + context.browser_t("pdfExisted"), style="sky_blue3")
+            rich.cnsl.print(
+                SINDENT + context.browser_t("pdfExisted"), style="sky_blue3"
+            )
             return
 
         page_num = self.load_book(title[0])
@@ -182,10 +188,12 @@ class fuz_browser:
 
         rich.update_single_progress(content=context.browser_t("progressDone"))
         rich.terminal_single_progress()
-        styled_full_path = "[light_steel_blue underline]" + full_path + "[/light_steel_blue underline]"
+        styled_full_path = (
+            "[light_steel_blue underline]" + full_path + "[/light_steel_blue underline]"
+        )
         rich.cnsl.print(
-            SINDENT + context.browser_t("pdfSaved").format(save_path=styled_full_path), 
-            style="sky_blue3"
+            SINDENT + context.browser_t("pdfSaved").format(save_path=styled_full_path),
+            style="sky_blue3",
         )
 
         exit_button = self.find_elem_by_css("button[class^=ViewerHeader]")
@@ -222,7 +230,9 @@ class fuz_browser:
         Path(save_dir).mkdir(parents=True, exist_ok=True)
 
         if need_load:
-            rich.create_single_progress(content=context.browser_t("progressDownload"), total=page_num)
+            rich.create_single_progress(
+                content=context.browser_t("progressDownload"), total=page_num
+            )
             need_turning = True
             for pn in range(page_num):
                 rich.advance_single_progress()

@@ -11,12 +11,13 @@ from .param import *
 
 class fuz_downloader:
     """docstring for fuz_downloader"""
+
     def __init__(self) -> None:
         Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
         # Open Fuz Comic web with browser.
         self.fuz_web = fuz_browser()
 
-    def run(self, skip_sele:bool) -> None:
+    def run(self, skip_sele: bool) -> None:
         # Try to login with the email address and password for the previous login.
         self.fuz_web.login()
         # Pick items to download from your purchased titles.
@@ -33,7 +34,7 @@ class fuz_downloader:
                 self.handle_viewer_url()
             else:
                 # Handling maganize options.
-                self.handle_maganize(picked_book)   
+                self.handle_maganize(picked_book)
             rich.cnsl.print("")
 
         rich.cnsl.print(SNORMAL + context.main_t("questDone"), style="sky_blue3")
@@ -46,7 +47,8 @@ class fuz_downloader:
             self.fuz_web.jump_to_specified_manga(specified_book)
             if not self.fuz_web.is_page_exist():
                 rich.cnsl.print(
-                    SWARNING + context.main_t("500NotFound").format(urlNumber=specified_book),
+                    SWARNING
+                    + context.main_t("500NotFound").format(urlNumber=specified_book),
                     style="orange1",
                 )
             else:
@@ -68,7 +70,10 @@ class fuz_downloader:
                 self.fuz_web.jump_to_book_viewer(specified_book)
                 if not self.fuz_web.is_page_exist():
                     rich.cnsl.print(
-                        SWARNING + context.main_t("500NotFound").format(urlNumber=specified_book),
+                        SWARNING
+                        + context.main_t("500NotFound").format(
+                            urlNumber=specified_book
+                        ),
                         style="orange1",
                     )
                 else:
@@ -86,6 +91,3 @@ class fuz_downloader:
         for picked_issue in picked_issues:
             self.fuz_web.jump_to_picked_issue(picked_issue)
             self.fuz_web.download_book(subdir=book_title)
-        
-
-    
