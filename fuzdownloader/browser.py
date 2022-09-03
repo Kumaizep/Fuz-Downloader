@@ -105,7 +105,7 @@ class fuz_browser:
         self.jump_to_purchased()
         books_title = self.find_elems_by_css("h3")
         books_num = len(books_title)
-        books_title_list = [(books_title[1].text, i) for i in range(books_num)]
+        books_title_list = [(books_title[i].text, i) for i in range(books_num)]
         books_title_list.append((context.browser_t("otherViewerUrl"), books_num))
         books_title_list.append((context.browser_t("otherCatalogUrl"), books_num + 1))
 
