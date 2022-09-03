@@ -8,10 +8,18 @@
     let out = system:
       let
         pkgs = nixpkgs.legacyPackages."${system}";
+        poetry-overrides = pkgs.poetry2nix.overrides.withDefaults (self: super: {
+          # Prevent "Could not find a version that satisfies the requirement wheel" for readchar and inquerier
+          readchar = super.readchar.overrideAttrs (old: {
+            nativeBuildInputs = old.nativeBuildInputs ++ [ self.wheel ];
+            propagatedBuildInputs = old.propagatedBuildInputs ++ [ self.wheel ];
+          });
+        });
         poetry-app = (with pkgs.poetry2nix; mkPoetryApplication {
           projectDir = ./.;
           preferWheels = true;
           propagatedBuildInputs = with pkgs; [ chromedriver ];
+          overrides = poetry-overrides;
         });
       in
       {
@@ -22,10 +30,17 @@
             pyright
             taplo-cli
             chromedriver
-            (pkgs.poetry2nix.mkPoetryEnv { projectDir = ./.; preferWheels = true; })
+            (pkgs.poetry2nix.mkPoetryEnv {
+              projectDir = ./.;
+              preferWheels = true;
+              overrides = poetry-overrides;
+            })
           ];
         };
 
         defaultPackage = poetry-app;
-      }; in with utils.lib; eachSystem defaultSystems out;
+      }; in
+    with utils.lib; eachSystem
+      defaultSystems
+      out;
 }
