@@ -15,8 +15,9 @@ class Context:
                 data = yaml.load(stream, Loader=yaml.FullLoader)
             return data
         except:
-            print("[x] Error: Read " + DATA_DIR + "/language-setting.yaml failed")
-            return "DEFAULT_LANGUAGE"
+            with open(DATA_DIR + "/language-setting.yaml", "w") as stream:
+                yaml.dump(DEFAULT_LANGUAGE_SETTING, stream, Dumper=yaml.Dumper)
+            return DEFAULT_LANGUAGE_SETTING
 
     def get_context(self, language) -> None:
         try:
