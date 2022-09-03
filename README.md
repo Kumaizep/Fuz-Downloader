@@ -14,6 +14,8 @@ For first time use:
 
 		`pip install poerty`
 
+	- For other methods, see here(https://python-poetry.org/docs/#installing-with-the-official-installer)
+
 For execution:
 
 1. Open a CLI and change the directory to `{where_you_unzip_to}/Fuz-downloader-main`.

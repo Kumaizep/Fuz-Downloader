@@ -1,7 +1,8 @@
 import yaml
+import inquirer
 
 from .param import *
-
+from .theme import *
 
 class Context:
     def __init__(self) -> None:
@@ -15,9 +16,18 @@ class Context:
                 data = yaml.load(stream, Loader=yaml.FullLoader)
             return data
         except:
+            data = DEFAULT_LANGUAGE_SETTING
+            # print("[I] 言語プロファイルなし / 缺乏語言設定檔 / No language profile")
+            questions = [
+                inquirer.List(
+                    "language",
+                    message="言語を選択してください / 請選擇語言 / Please select language",
+                    choices=["ja-JP", "zh-TW", "en-US"])
+            ]
+            data["language"] = inquirer.prompt(questions, theme=DefaultTheme())["language"]
             with open(DATA_DIR + "/language-setting.yaml", "w") as stream:
-                yaml.dump(DEFAULT_LANGUAGE_SETTING, stream, Dumper=yaml.Dumper)
-            return DEFAULT_LANGUAGE_SETTING
+                yaml.dump(data, stream, Dumper=yaml.Dumper)
+            return data
 
     def get_context(self, language) -> None:
         try:
