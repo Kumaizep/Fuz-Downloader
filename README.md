@@ -10,7 +10,7 @@ For first time use:
 - This tool is based on the `selenium`, `webdriver_manager`, `img2pdf`, `rich`, `blessed`, `inquirer`, `PyYAML`, and `pypdf2` modules.
 
 - We Poetry to manage dependency, please confirm that Poetry has been installed.
-	- One way to install Poetry is by using `pip`:
+	- One method to install Poetry is by using `pip`:
 
 		`pip install poerty`
 
