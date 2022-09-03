@@ -5,8 +5,8 @@ main:
 browser:
     mainTitle: '< Fuz-Downloader v0.1.0 >'
     accountInfoError: 'メールアドレス、もしくはパスワードを間違えています。再入力してください。'
-    accountAddress: 'メールアドレス： '
-    accountPassword: 'パスワード： '
+    accountAddress: 'メールアドレス'
+    accountPassword: 'パスワード'
     loginSuccess: 'ログインが完了しました。'
     waitAMoment: '少々お待ちください。'
     otherViewerUrl: 'その他： リーダーページのURLでダウンロード  '
@@ -30,8 +30,8 @@ func:
     urlNumber: 'URL番号： '
     invalidChoice: '無効な選択： '
     invalidFormat: '指定されている形式で入力してください。'
-    accountAddress: 'メールアドレス： '
-    accountPassword: 'パスワード： '
+    accountAddress: 'メールアドレス'
+    accountPassword: 'パスワード'
 
 mkpdf:
     progressBookmark: 'ブックマーク'

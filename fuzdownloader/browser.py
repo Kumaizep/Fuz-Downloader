@@ -47,8 +47,15 @@ class fuz_browser:
             rich.cnsl.print(
                 SWARNING + context.browser_t("accountInfoError"), style="orange1"
             )
-            self.account["address"] = input(context.browser_t("accountAddress"))
-            self.account["password"] = input(context.browser_t("accountPassword"))
+            questions = [
+                inquirer.Text(
+                    name="address", message=context.browser_t("accountAddress")
+                ),
+                inquirer.Password(
+                    name="password", message=context.browser_t("accountPassword")
+                ),
+            ]
+            self.account = inquirer.prompt(questions, theme=DefaultTheme())
             self.try_login()
         rich.cnsl.print(SNORMAL + context.browser_t("loginSuccess"), style="sky_blue3")
         save_account_info(self.account)

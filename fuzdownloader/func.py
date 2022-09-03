@@ -1,3 +1,4 @@
+import inquirer
 import yaml
 
 from typing import List
@@ -7,6 +8,7 @@ from os.path import exists
 from .console import *
 from .context import *
 from .param import *
+from .theme import *
 
 
 def check_pdf_exist(path: str, filename: str) -> bool:
@@ -115,9 +117,13 @@ def get_account_info():
             data = yaml.load(stream, Loader=yaml.FullLoader)
         return data
     else:
-        address = input(context.func_t("accountAddress"))
-        password = input(context.func_t("accountPassword"))
-        return {"address": address, "password": password}
+        questions = [
+            inquirer.Text(name="address", message=context.browser_t("accountAddress")),
+            inquirer.Password(
+                name="password", message=context.browser_t("accountPassword")
+            ),
+        ]
+        return inquirer.prompt(questions, theme=DefaultTheme())
 
 
 def save_account_info(account) -> None:

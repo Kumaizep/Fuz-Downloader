@@ -5,8 +5,8 @@ main:
 browser:
     mainTitle: '< Fuz-Downloader v0.1.0 >'
     accountInfoError: '電子郵件或是密碼出現錯誤。請重新輸入。'
-    accountAddress: '電子郵件： '
-    accountPassword: '密碼： '
+    accountAddress: '電子郵件'
+    accountPassword: '密碼'
     loginSuccess: '登入完成。'
     waitAMoment: '請稍等一下。'
     otherViewerUrl: '其他： 用閱讀器的URL下載  '
@@ -30,8 +30,8 @@ func:
     urlNumber: 'URL號碼： '
     invalidChoice: '無效的選擇： '
     invalidFormat: '請依照指定形式輸入。'
-    accountAddress: '電子郵件： '
-    accountPassword: '密碼： '
+    accountAddress: '電子郵件'
+    accountPassword: '密碼'
 
 mkpdf:
     progressBookmark: '製作書籤'
