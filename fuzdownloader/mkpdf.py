@@ -4,11 +4,12 @@ from PyPDF2 import PdfFileWriter, PdfFileReader
 import img2pdf
 
 from .console import *
+from .context import *
 from .param import *
 
 
 def add_bookmark(path: str, bookmarks: List[List[str]], title: str) -> None:
-    rich.update_single_progress(content="Marking")
+    rich.update_single_progress(content=context.mkpdf_t("progressBookmark"))
     reader = PdfFileReader(path, strict=False)
     writer = PdfFileWriter()
     for page in range(reader.numPages):

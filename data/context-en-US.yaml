@@ -1,0 +1,41 @@
+main:
+    500NotFound: 'Quest Cancel: {urlNumber} is temporarily unavailable.'
+    questDone: 'Quest Done'
+
+browser:
+    mainTitle: '< Fuz-Downloader v0.1.0 >'
+    accountInfoError: 'Wrong email address or password. Please re-enter.'
+    accountAddress: 'Email address: '
+    accountPassword: 'Password: '
+    loginSuccess: 'Login successfully.'
+    waitAMoment: 'Please wait a moment.'
+    otherViewerUrl: 'Other: Download from url of book viewer  '
+    otherCatalogUrl: 'Other: Download all free episodes from the specified URL  '
+    autoSelector: 'Auto-selector: '
+    chooseDownloadItem: 'Select what you want to download'
+    chooseDownloadIssue: 'Select the issue you want to download'
+    progressDownload: 'Downloading'
+    progressProcess: 'Processing'
+    progressDone: 'Done'
+    pdfExisted: 'PDF already exists. [ Skip ]'
+    pdfSaved: 'PDF has been saved at {save_path}.'
+
+func:
+    keyInViewerUrl: 'Enter the number at the end of the URL of the book (viewer) you want to download.'
+    keyInViewerUrlExample: 'For example, the URL of "ご注文はうさぎですか？１巻第０話" is "https://comic-fuz.com/manga/viewer/2443", if you want to download it, please enter "2443". separated by half-spaces.'
+    keyInViewerUrlTitle: '< Other: Download from url of book viewer >'
+    keyInCatalogUrl: 'Enter the number at the end of the URL of the work you want to download.'
+    keyInCatalogUrlExample: 'For example, the URL of "ご注文はうさぎですか？" is "https://comic-fuz.com/manga/183", if you want to download it, please enter "183". separated by half-spaces.'
+    keyInCatalogUrlTitle: '< Other: Download all free episodes from the specified URL >'
+    urlNumber: 'URL number: '
+    invalidChoice: 'Invalid selection: '
+    invalidFormat: 'Please enter in the specified format.'
+    accountAddress: 'Email address: '
+    accountPassword: 'Password: '
+
+mkpdf:
+    progressBookmark: 'Bookmarking'
+
+console:
+    remaining: 'Remaining time'
+    elapsed: 'Elapsed time'

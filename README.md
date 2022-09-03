@@ -24,4 +24,16 @@ For execution:
 
 3. The downloaded file will be saved as `{where_you_unzip_to}/Fuz-downloader-main/output/{comic_title}.pdf`.
 
+Language Setting:
+
+- Execute `poetry run fuzdownloader set-lang {language code}` will change the default interface language to the specified language and run the downloader
+
+- The following languages code are currently supported:
+	- English: `en-US`
+	- 繁體中文: `zh-TW`
+	- 日本語: `ja-JP`
+
+- To add or modify a language file, please fill in the format of the existing language file in `{where_you_unzip_to}/Fuz-downloader-main/data`.
+	- For the case of adding language files, you should name the new language file `context-{language code}.yaml`, and write the new language code into the `list` in `language-setting.yaml`
+
 

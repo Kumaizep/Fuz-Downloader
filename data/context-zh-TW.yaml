@@ -1,0 +1,41 @@
+main:
+    500NotFound: '任務取消： {urlNumber} 暫時無法使用。'
+    questDone: '任務完成'
+
+browser:
+    mainTitle: '< Fuz-Downloader v0.1.0 >'
+    accountInfoError: '電子郵件或是密碼出現錯誤。請重新輸入。'
+    accountAddress: '電子郵件： '
+    accountPassword: '密碼： '
+    loginSuccess: '登入完成。'
+    waitAMoment: '請稍等一下。'
+    otherViewerUrl: '其他： 用閱讀器的URL下載  '
+    otherCatalogUrl: '其他： 指定URL的全部免費單話  '
+    autoSelector: '自動選擇器： '
+    chooseDownloadItem: '請選擇想下載的東西'
+    chooseDownloadIssue: '請選擇想下載的刊號'
+    progressDownload: '下載中'
+    progressProcess: '處理中'
+    progressDone: '完成'
+    pdfExisted: 'PDF已經存在了。[ 跳過 ]'
+    pdfSaved: 'PDF已保存到 {save_path} 。'
+
+func:
+    keyInViewerUrl: '請輸入想要下載的漫畫閱讀器的URL末端的數字。'
+    keyInViewerUrlExample: '舉例來說，「ご注文はうさぎですか？１巻第０話」的URL是「https://comic-fuz.com/manga/viewer/2443」，想要下載的話請輸入「2443」。以半形空格間隔。'
+    keyInViewerUrlTitle: '< 其他： 用閱讀器的URL下載 >'
+    keyInCatalogUrl: '請輸入想要下載的作品頁面的URL末端的數字。'
+    keyInCatalogUrlExample: '舉例來說，「ご注文はうさぎですか？」的URL是「https://comic-fuz.com/manga/183」，想要下載的話請輸入「183」。以半形空格間隔。'
+    keyInCatalogUrlTitle: '< 其他： 指定URL的全部免費單話 >'
+    urlNumber: 'URL號碼： '
+    invalidChoice: '無效的選擇： '
+    invalidFormat: '請依照指定形式輸入。'
+    accountAddress: '電子郵件： '
+    accountPassword: '密碼： '
+
+mkpdf:
+    progressBookmark: '製作書籤'
+
+console:
+    remaining: '預計時間'
+    elapsed: '經過時間'

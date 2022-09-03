@@ -33,7 +33,7 @@ def check_pdf_exist(path: str, filename: str) -> bool:
 
 def get_reader_url_select_result() -> List[int]:
     rich.panel(
-        "[bold default]" + context.func_t("keyInViewerUrl") + "。[/bold default]\n\n[default]" + context.func_t("keyInViewerUrlExample") + "[/default]",
+        "[bold default]" + context.func_t("keyInViewerUrl") + "[/bold default]\n\n[default]" + context.func_t("keyInViewerUrlExample") + "[/default]",
         title="[bold]" + context.func_t("keyInViewerUrlTitle") + "[/bold]",
         style="sky_blue3",
     )
@@ -59,7 +59,7 @@ def get_reader_url_select_result() -> List[int]:
 
 def get_manga_url_select_result() -> List[int]:
     rich.panel(
-        "[bold default]" + context.func_t("keyInCatalogUrl") + "。[/bold default]\n\n[default]" + context.func_t("keyInCatalogUrlExample") + "[/default]",
+        "[bold default]" + context.func_t("keyInCatalogUrl") + "[/bold default]\n\n[default]" + context.func_t("keyInCatalogUrlExample") + "[/default]",
         title="[bold]" + context.func_t("keyInCatalogUrlTitle") + "[/bold]",
         style="sky_blue3",
     )

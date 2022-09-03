@@ -174,13 +174,13 @@ class fuz_browser:
             return
 
         page_num = self.load_book(title[0])
-        rich.update_single_progress(content="Processing")
+        rich.update_single_progress(content=context.browser_t("progressProcess"))
         bookmarks = self.get_bookmarks()
 
         make_pdf(save_dir, title[0], page_num, bookmarks)
         shutil.rmtree(OUTPUT_DIR + "/" + "TEMP" + title[0])
 
-        rich.update_single_progress(content="Done")
+        rich.update_single_progress(content=context.browser_t("progressDone"))
         rich.terminal_single_progress()
         styled_full_path = "[light_steel_blue underline]" + full_path + "[/light_steel_blue underline]"
         rich.cnsl.print(
@@ -222,7 +222,7 @@ class fuz_browser:
         Path(save_dir).mkdir(parents=True, exist_ok=True)
 
         if need_load:
-            rich.create_single_progress(content="Downloading", total=page_num)
+            rich.create_single_progress(content=context.browser_t("progressDownload"), total=page_num)
             need_turning = True
             for pn in range(page_num):
                 rich.advance_single_progress()

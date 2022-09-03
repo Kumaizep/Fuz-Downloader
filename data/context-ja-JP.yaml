@@ -9,12 +9,15 @@ browser:
     accountPassword: 'パスワード： '
     loginSuccess: 'ログインが完了しました。'
     waitAMoment: '少々お待ちください。'
-    otherViewerUrl: 'その他： リーダーページのURLでダウンロード'
-    otherCatalogUrl: 'その他： 指定されたURLのすべての無料単話'
+    otherViewerUrl: 'その他： リーダーページのURLでダウンロード  '
+    otherCatalogUrl: 'その他： 指定されたURLのすべての無料単話  '
     autoSelector: 'オートセレクター： '
     chooseDownloadItem: 'ダウンロードしたいものを選択してください'
-    chooseDownloadIssue: 'ダウンロードした刊号を選択してください'
-    pdfExisted: 'PDFは既に存在します。[ Skip ]'
+    chooseDownloadIssue: 'ダウンロードしたい刊号を選択してください'
+    progressDownload: 'ダウンロード中'
+    progressProcess: '処理中'
+    progressDone: '完了'
+    pdfExisted: 'PDFは既に存在します。[ スキップ ]'
     pdfSaved: 'PDFは {save_path} に保存されました。'
 
 func:
@@ -29,3 +32,10 @@ func:
     invalidFormat: '指定されている形式で入力してください。'
     accountAddress: 'メールアドレス： '
     accountPassword: 'パスワード： '
+
+mkpdf:
+    progressBookmark: 'ブックマーク'
+
+console:
+    remaining: '推定時間'
+    elapsed: '經過時間'

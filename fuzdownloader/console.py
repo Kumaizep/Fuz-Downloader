@@ -1,9 +1,7 @@
-from rich.console import Console
-from rich.panel import Panel
-from rich.progress import track
-from rich.progress import Progress
 import time
 
+from rich.console import Console
+from rich.panel import Panel
 from rich.progress import (
     BarColumn,
     DownloadColumn,
@@ -19,6 +17,8 @@ from rich.progress import (
     TransferSpeedColumn,
 )
 
+from .context import *
+from .param import *
 
 class RichConsole:
     def __init__(self) -> None:
@@ -32,14 +32,14 @@ class RichConsole:
             SpinnerColumn(spinner_name="arc", finished_text="✓"),
             BarColumn(),
             TextColumn("[{task.completed}/{task.total}]\t"),
-            TextColumn("EST."),
+            TextColumn(context.console_t("remaining")),
             TimeRemainingColumn(),
-            TextColumn("ELA."),
+            TextColumn(context.console_t("elapsed")),
             TimeElapsedColumn(),
         )
         self.single_progress.start()
         self.single_progress_task_id = self.single_progress.add_task(
-            "　　" + content, total=total
+            SINDENT + content, total=total
         )
 
     def update_single_progress(self, content="", advance=0) -> None:

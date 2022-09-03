@@ -30,7 +30,7 @@ class Context:
             self.language_setting["language"] = language
             try:
                 with open(DATA_DIR + "/language-setting.yaml", "w") as stream:
-                    yaml.dump(account, stream, Dumper=yaml.Dumper)
+                    yaml.dump(self.language_setting, stream, Dumper=yaml.Dumper)
             except:
                 print("[X] Error: Write " + DATA_DIR + "/language-setting.yaml failed")
             self.get_context(self.language_setting["language"])
@@ -45,6 +45,12 @@ class Context:
 
     def func_t(self, index) -> str:
         return self.text["func"][index]
+
+    def mkpdf_t(self, index) -> str:
+        return self.text["mkpdf"][index]
+
+    def console_t(self, index) -> str:
+        return self.text["console"][index]
 
 
 context = Context()
