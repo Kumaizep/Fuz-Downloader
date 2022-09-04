@@ -114,7 +114,7 @@ def get_manga_url_select_result() -> List[int]:
 def get_account_info():
     path = DATA_DIR + "/account.yaml"
     if exists(path):
-        with open(path, "r") as stream:
+        with open(path, "r", encoding="utf8") as stream:
             data = yaml.load(stream, Loader=yaml.FullLoader)
         return data
     else:
@@ -129,7 +129,7 @@ def get_account_info():
 
 def save_account_info(account) -> None:
     Path(DATA_DIR).mkdir(parents=True, exist_ok=True)
-    with open(DATA_DIR + "/account.yaml", "w") as stream:
+    with open(DATA_DIR + "/account.yaml", "w", encoding="utf8") as stream:
         yaml.dump(account, stream, Dumper=yaml.Dumper)
 
 

@@ -13,7 +13,7 @@ class Context:
 
     def get_language_setting(self) -> str:
         try:
-            with open(DATA_DIR + "/language-setting.yaml", "r") as stream:
+            with open(DATA_DIR + "/language-setting.yaml", "r", encoding="utf8") as stream:
                 data = yaml.load(stream, Loader=yaml.FullLoader)
             return data
         except:
@@ -29,13 +29,13 @@ class Context:
             data["language"] = inquirer.prompt(questions, theme=DefaultTheme())[
                 "language"
             ]
-            with open(DATA_DIR + "/language-setting.yaml", "w") as stream:
+            with open(DATA_DIR + "/language-setting.yaml", "w", encoding="utf8") as stream:
                 yaml.dump(data, stream, Dumper=yaml.Dumper)
             return data
 
     def get_context(self, language) -> None:
         try:
-            with open(DATA_DIR + "/context-" + language + ".yaml", "r") as stream:
+            with open(DATA_DIR + "/context-" + language + ".yaml", "r", encoding="utf8") as stream:
                 self.text = yaml.load(stream, Loader=yaml.FullLoader)
         except:
             print(
@@ -47,7 +47,7 @@ class Context:
         if language in self.language_setting["list"]:
             self.language_setting["language"] = language
             try:
-                with open(DATA_DIR + "/language-setting.yaml", "w") as stream:
+                with open(DATA_DIR + "/language-setting.yaml", "w", encoding="utf8") as stream:
                     yaml.dump(self.language_setting, stream, Dumper=yaml.Dumper)
             except:
                 print("[X] Error: Write " + DATA_DIR + "/language-setting.yaml failed")
