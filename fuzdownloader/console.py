@@ -2,6 +2,7 @@ import time
 
 from rich.console import Console
 from rich.panel import Panel
+from rich.padding import Padding
 from rich.progress import (
     BarColumn,
     DownloadColumn,
@@ -32,7 +33,7 @@ class RichConsole:
             TextColumn("[progress.description]{task.description}"),
             SpinnerColumn(spinner_name="arc", finished_text="✓"),
             BarColumn(),
-            TextColumn("[{task.completed}/{task.total}]\t"),
+            TextColumn("[{task.completed:3d}/{task.total:3d}]\t"),
             TextColumn(context.console_t("remaining")),
             TimeRemainingColumn(),
             TextColumn(context.console_t("elapsed")),
@@ -88,6 +89,9 @@ class RichConsole:
                 highlight=highlight,
             )
         )
+
+    def padding_4(self, text, ptaple, style) -> None:
+        self.cnsl.print(Padding(text, ptaple, style=style))
 
 
 rich = RichConsole()

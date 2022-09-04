@@ -1,5 +1,7 @@
 import base64
+import blackboxprotobuf
 import inquirer
+import json
 import os
 import shutil
 import time
@@ -10,6 +12,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from webdriver_manager.chrome import ChromeDriverManager
 
 from .console import *
@@ -29,16 +32,24 @@ class fuz_browser:
             style="sky_blue3",
         )
         options = Options()
-        options.add_argument("--headless")
+        if not DEBUG_MODE:
+            options.add_argument("--headless")
+        caps = DesiredCapabilities.CHROME
+        caps["goog:loggingPrefs"] = {"performance": "ALL"}
         if shutil.which("chromedriver") is None:
             self.driver = webdriver.Chrome(
-                service=Service(ChromeDriverManager().install()), options=options
+                service=Service(ChromeDriverManager().install()),
+                options=options,
+                desired_capabilities=caps,
             )
         else:
-            self.driver = webdriver.Chrome(options=options)
+            self.driver = webdriver.Chrome(options=options, desired_capabilities=caps)
         self.driver.implicitly_wait(3)
         self.driver.get("https://comic-fuz.com/account/signin")
         self.account = get_account_info()
+
+    def terminal(self):
+        self.driver.quit()
 
     def login(self) -> None:
         self.try_login()
@@ -175,7 +186,7 @@ class fuz_browser:
 
     def download_book(self, mark="", subdir="") -> None:
         title = self.get_book_title(mark)
-        save_dir = self.gen_save_dir(title[1], subdir)
+        save_dir = self.gen_save_dir(title[1], subdir.replace("/", "／"))
         full_path = os.path.abspath(os.getcwd()) + save_dir[1:]
 
         rich.cnsl.print("[+] " + title[0][:60] + "：", style="sky_blue3")
@@ -198,10 +209,15 @@ class fuz_browser:
         styled_full_path = (
             "[light_steel_blue underline]" + full_path + "[/light_steel_blue underline]"
         )
-        rich.cnsl.print(
-            SINDENT + context.browser_t("pdfSaved").format(save_path=styled_full_path),
+        rich.padding_4(
+            context.browser_t("pdfSaved").format(save_path=styled_full_path),
+            (0, 0, 0, 4),
             style="sky_blue3",
         )
+        # rich.cnsl.print(
+        #     SINDENT + context.browser_t("pdfSaved").format(save_path=styled_full_path),
+        #     style="sky_blue3"
+        # )
 
         exit_button = self.find_elem_by_css("button[class^=ViewerHeader]")
         exit_button.click()
@@ -210,7 +226,7 @@ class fuz_browser:
     def get_book_title(self, mark: str) -> List[str]:
         origin_title = self.find_elem_by_css("p[class^='ViewerHeader']").text
         title = origin_title + mark
-        return [title, origin_title]
+        return [title.replace("/", "／"), origin_title.replace("/", "／")]
 
     def gen_save_dir(self, origin_title: str, subdir: str) -> str:
         save_dir = OUTPUT_DIR
@@ -308,8 +324,8 @@ class fuz_browser:
         result = [[dn.text, di.text] for dn, di in zip(dailogs_name, dailogs_index)]
         return result
 
-    def jump_to_manga_viewer(self, book_id: int) -> None:
-        book_url = "https://comic-fuz.com/manga/viewer/" + str(book_id)
+    def jump_to_manga_viewer(self, manga_id: int) -> None:
+        book_url = "https://comic-fuz.com/manga/viewer/" + str(manga_id)
         self.driver.get(book_url)
         time.sleep(1)
 
@@ -318,34 +334,46 @@ class fuz_browser:
         self.driver.get(book_url)
         time.sleep(1)
 
-    def get_free_chapter(self) -> List[List[str]]:
-        chap_elems = self.find_elems_by_css("a[class^=Chapter_chapter]")
-        chap_names = self.find_elems_by_css("h3[class^=Chapter_chapter__name]")
-        chap_subnames = self.find_elems_by_css("p[class^=Chapter_chapter__subName]")
-        chap_count = 0
-        free_chaps = list()
-        for chap_elem in chap_elems:
-            elem_text = chap_elem.text.split("\n")
-            if "無料" in elem_text:
-                free_chaps.append(
-                    [
-                        str(chap_count),
-                        chap_names[chap_count].text + chap_subnames[chap_count].text,
-                    ]
-                )
-            chap_count = chap_count + 1
+    # def get_free_chapter(self) -> List[List[str]]:
+    #     chap_elems = self.find_elems_by_css("a[class^=Chapter_chapter]")
+    #     chap_names = self.find_elems_by_css("h3[class^=Chapter_chapter__name]")
+    #     chap_subnames = self.find_elems_by_css("p[class^=Chapter_chapter__subName]")
+    #     chap_count = 0
+    #     free_chaps = list()
+    #     for chap_elem in chap_elems:
+    #         elem_text = chap_elem.text.split("\n")
+    #         if "無料" in elem_text:
+    #             free_chaps.append(
+    #                 [
+    #                     str(chap_count),
+    #                     chap_names[chap_count].text + chap_subnames[chap_count].text,
+    #                 ]
+    #             )
+    #         chap_count = chap_count + 1
+    #     return free_chaps
 
-        return free_chaps
+    def get_free_episodes(self, episodes_info) -> List[List[str]]:
+        free_episodes = [episode[1] for episode in episodes_info if episode[0] == 0]
+        return free_episodes
 
-    def jump_to_specified_manga(self, manga_id: int) -> None:
+    def get_free_volumns(self, volumns_info) -> List[List[str]]:
+        free_volumns = [volumn[1] for volumn in volumns_info if volumn[0] == True]
+        return free_volumns
+
+    def jump_to_manga_catalog(self, manga_id: int) -> None:
         book_url = "https://comic-fuz.com/manga/" + str(manga_id)
         self.driver.get(book_url)
         time.sleep(1)
 
-    def jump_to_picked_chapter(self, chapter_id: int) -> None:
-        read_button = self.find_elems_by_css("a[class^=Chapter_chapter]")
-        read_button[chapter_id].click()
+    def jump_to_book_catalog(self, book_id: int) -> None:
+        book_url = "https://comic-fuz.com/book/" + str(book_id)
+        self.driver.get(book_url)
         time.sleep(1)
+
+    # def jump_to_picked_chapter(self, chapter_id: int) -> None:
+    #     read_button = self.find_elems_by_css("a[class^=Chapter_chapter]")
+    #     read_button[chapter_id].click()
+    #     time.sleep(1)
 
     def is_page_exist(self) -> bool:
         if self.find_elems_by_css("[class^='__500']"):
@@ -358,3 +386,79 @@ class fuz_browser:
 
     def find_elems_by_css(self, css_selector: str) -> List:
         return self.driver.find_elements(By.CSS_SELECTOR, css_selector)
+
+    def get_manga_detail_request(self):
+        events = self.get_fetch_response_by_url(
+            "https://api.comic-fuz.com/v1/manga_detail"
+        )
+        if len(events) == 0:
+            time.sleep(0.5)
+            return self.get_manga_detail_request()
+        elif len(events) > 1:
+            if DEBUG_MODE:
+                events_id = [event["params"]["requestId"] for event in events]
+                rich.cnsl.print(
+                    SWARNING + "Get multiple manga_detail request! ",
+                    style="red1",
+                    end="",
+                )
+                rich.cnsl.print(events_id)
+        return events[-1]["params"]["requestId"]
+
+    def get_book_detail_request(self):
+        events = self.get_fetch_response_by_url(
+            "https://api.comic-fuz.com/v1/book_issue_detail"
+        )
+        if len(events) == 0:
+            time.sleep(0.5)
+            return self.get_book_detail_request()
+        elif len(events) > 1:
+            if DEBUG_MODE:
+                events_id = [event["params"]["requestId"] for event in events]
+                rich.cnsl.print(
+                    SWARNING + "Get multiple book_detail request! ",
+                    style="red1",
+                    end="",
+                )
+                rich.cnsl.print(events_id)
+        return events[-1]["params"]["requestId"]
+
+    def get_fetch_response_by_url(self, url):
+        browser_log = self.driver.get_log("performance")
+        events = [process_browser_log_entry(entry) for entry in browser_log]
+        events = [
+            event
+            for event in events
+            if event["method"] == "Network.responseReceived"
+            and event["params"]["type"] == "Fetch"
+            and event["params"]["response"]["url"] == url
+        ]
+        return events
+
+    def filter_manga_detail(self, message_json):
+        episode_info = list()
+        if type(message_json["3"]) is dict:
+            message_json["3"] = [message_json["3"]]
+        for volumn in message_json["3"]:
+            if type(volumn["2"]) is dict:
+                volumn["2"] = [volumn["2"]]
+            for episode in volumn["2"]:
+                episode_info.append([len(episode["5"]), [episode["1"], episode["2"]]])
+        return [message_json["2"]["2"], episode_info]
+
+    def filter_book_detail(self, message_json):
+        volumn_info = list()
+        if type(message_json["4"]) is dict:
+            message_json["4"] = [message_json["4"]]
+        for volumn in message_json["4"]:
+            volumn_info.append(["6" in volumn.keys(), [volumn["1"], volumn["2"]]])
+        return [message_json["2"], volumn_info]
+
+    def protobuf_request_decode(self, request_id):
+        request_body = self.driver.execute_cdp_cmd(
+            "Network.getResponseBody", {"requestId": request_id}
+        )
+        data = base64.b64decode(request_body["body"])
+        message, typedef = blackboxprotobuf.protobuf_to_json(data)
+        message_json = json.loads(message)
+        return message_json

@@ -12,3 +12,5 @@ def main() -> None:
 
     fuzdl = fuz_downloader()
     fuzdl.run(skip_sele)
+
+    fuzdl.terminal()

@@ -1,5 +1,5 @@
 # Fuz-Downloader
-This is a CLI tool to download comic from Fuz Comic.
+A python-based CLI interactive program for downloading viewable comics from [COMIC FUZ](https://comic-fuz.com/).
 
 ## Usage
 

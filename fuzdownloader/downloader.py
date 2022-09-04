@@ -17,6 +17,9 @@ class fuz_downloader:
         # Open Fuz Comic web with browser.
         self.fuz_web = fuz_browser()
 
+    def terminal(self) -> None:
+        self.fuz_web.terminal()
+
     def run(self, skip_sele: bool) -> None:
         # Try to login with the email address and password for the previous login.
         self.fuz_web.login()
@@ -44,22 +47,39 @@ class fuz_downloader:
         specified_books = get_manga_url_select_result()
         for specified_book in specified_books:
             # Jump to the specified page and detect if it is available
-            self.fuz_web.jump_to_specified_manga(specified_book)
+            self.fuz_web.jump_to_manga_catalog(specified_book)
             if not self.fuz_web.is_page_exist():
-                rich.cnsl.print(
-                    SWARNING
-                    + context.main_t("500NotFound").format(urlNumber=specified_book),
-                    style="orange1",
-                )
+                self.fuz_web.jump_to_book_catalog(specified_book)
+                if not self.fuz_web.is_page_exist():
+                    rich.cnsl.print(
+                        SWARNING
+                        + context.main_t("500NotFound").format(
+                            urlNumber=specified_book
+                        ),
+                        style="orange1",
+                    )
+                else:
+                    request_id = self.fuz_web.get_book_detail_request()
+                    message_json = self.fuz_web.protobuf_request_decode(request_id)
+                    book_title, volumn_info = self.fuz_web.filter_book_detail(
+                        message_json
+                    )
+
+                    volumns = self.fuz_web.get_free_volumns(volumn_info)
+                    for volumn in volumns:
+                        self.fuz_web.jump_to_book_viewer(int(volumn[0]))
+                        self.fuz_web.download_book(mark=volumn[1], subdir=book_title)
             else:
-                book_title = self.fuz_web.find_elem_by_css(
-                    "h1[class^='title_detail_introduction__name']"
-                ).text
-                chapters = self.fuz_web.get_free_chapter()
-                for chapter in chapters:
-                    self.fuz_web.jump_to_specified_manga(specified_book)
-                    self.fuz_web.jump_to_picked_chapter(int(chapter[0]))
-                    self.fuz_web.download_book(chapter[1], book_title)
+                request_id = self.fuz_web.get_manga_detail_request()
+                message_json = self.fuz_web.protobuf_request_decode(request_id)
+                book_title, episodes_info = self.fuz_web.filter_manga_detail(
+                    message_json
+                )
+
+                episodes = self.fuz_web.get_free_episodes(episodes_info)
+                for episode in episodes:
+                    self.fuz_web.jump_to_manga_viewer(int(episode[0]))
+                    self.fuz_web.download_book(mark=episode[1], subdir=book_title)
 
     def handle_viewer_url(self) -> None:
         specified_books = get_reader_url_select_result()

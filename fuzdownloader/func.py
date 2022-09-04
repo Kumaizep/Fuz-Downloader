@@ -1,4 +1,5 @@
 import inquirer
+import json
 import yaml
 
 from typing import List
@@ -136,3 +137,8 @@ def save_file(save_dir, page, data) -> None:
     path = save_dir + "/" + str(page) + ".jpeg"
     with open(path, "wb") as binary_file:
         binary_file.write(data)
+
+
+def process_browser_log_entry(entry):
+    response = json.loads(entry["message"])["message"]
+    return response

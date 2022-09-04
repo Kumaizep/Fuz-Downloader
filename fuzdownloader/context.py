@@ -4,6 +4,7 @@ import inquirer
 from .param import *
 from .theme import *
 
+
 class Context:
     def __init__(self) -> None:
         self.text = None
@@ -22,9 +23,12 @@ class Context:
                 inquirer.List(
                     "language",
                     message="言語を選択してください / 請選擇語言 / Please select language",
-                    choices=["ja-JP", "zh-TW", "en-US"])
+                    choices=["ja-JP", "zh-TW", "en-US"],
+                )
             ]
-            data["language"] = inquirer.prompt(questions, theme=DefaultTheme())["language"]
+            data["language"] = inquirer.prompt(questions, theme=DefaultTheme())[
+                "language"
+            ]
             with open(DATA_DIR + "/language-setting.yaml", "w") as stream:
                 yaml.dump(data, stream, Dumper=yaml.Dumper)
             return data
