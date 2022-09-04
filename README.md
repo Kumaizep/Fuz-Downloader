@@ -1,13 +1,18 @@
 # Fuz-Downloader
 A python-based CLI interactive program for downloading viewable comics from [COMIC FUZ](https://comic-fuz.com/).
 
+## Installation
+
+Download the zip file from [here](https://github.com/Kumaizep/Fuz-downloader/archive/refs/heads/main.zip) and unzip it anywhere you want. You might need to install `Poetry` to manage and execute it, please refer to the Usage section for `Poetry`.
+
+
 ## Usage
 
 For first time use:
 
 - The bot program is written in Python and tested in version `3.10.5`.It is recommended to run with a version no earlier than this one. And mainly depends on `selenium`, `webdriver_manager` manager, and several other libraries
 
-- We Poetry to manage dependency, please confirm that Poetry has been installed.
+- We use `Poetry` to manage dependency, please confirm that `Poetry` has been installed.
 	- One simple (but not recommended) way to install Poetry is by using `pip`:
 
 		`pip install poerty`
