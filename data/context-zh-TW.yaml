@@ -1,5 +1,6 @@
 main:
     500NotFound: '任務取消： {urlNumber} 暫時無法使用。'
+    foundBook: '免費漫畫數： {freeComicNumber}'
     questDone: '任務完成'
 
 browser:

@@ -1,5 +1,6 @@
 main:
     500NotFound: 'クエストキャンセル： {urlNumber} は一時的にご利用できません。'
+    foundBook: '無料コミック数： {freeComicNumber}'
     questDone: 'クエスト完了'
 
 browser:

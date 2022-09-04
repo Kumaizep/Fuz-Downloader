@@ -1,5 +1,6 @@
 main:
     500NotFound: 'Quest Cancel: {urlNumber} is temporarily unavailable.'
+    foundBook: 'Number of free comics: {freeComicNumber}'
     questDone: 'Quest Done'
 
 browser:
