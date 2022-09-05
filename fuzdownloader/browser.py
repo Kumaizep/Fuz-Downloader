@@ -451,7 +451,7 @@ class fuz_browser:
         if type(message_json["4"]) is dict:
             message_json["4"] = [message_json["4"]]
         for volumn in message_json["4"]:
-            volumn_info.append(["6" in volumn.keys(), [volumn["1"], volumn["2"]]])
+            volumn_info.append(["7" in volumn.keys(), [volumn["1"], volumn["2"]]])
         return [message_json["2"], volumn_info]
 
     def protobuf_request_decode(self, request_id):

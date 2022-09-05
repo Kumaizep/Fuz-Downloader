@@ -66,18 +66,23 @@ class fuz_downloader:
                     )
 
                     rich.cnsl.rule(
-                        "[bold sky_blue3]" + book_title + f" # book/{specified_book}" + "[/bold sky_blue3]",
+                        "[bold sky_blue3]"
+                        + book_title
+                        + f" # book/{specified_book}"
+                        + "[/bold sky_blue3]",
                         style="sky_blue3",
                     )
                     volumns = self.fuz_web.get_free_volumns(volumn_info)
                     rich.cnsl.print(
                         SNORMAL
-                        + context.main_t("foundBook").format(freeComicNumber=len(volumns)),
+                        + context.main_t("foundBook").format(
+                            freeComicNumber=len(volumns)
+                        ),
                         style="sky_blue3",
                     )
                     for volumn in volumns:
                         self.fuz_web.jump_to_book_viewer(int(volumn[0]))
-                        self.fuz_web.download_book(mark=volumn[1], subdir=book_title)
+                        self.fuz_web.download_book(mark="", subdir=book_title)
             else:
                 request_id = self.fuz_web.get_manga_detail_request()
                 message_json = self.fuz_web.protobuf_request_decode(request_id)
@@ -86,15 +91,18 @@ class fuz_downloader:
                 )
 
                 rich.cnsl.rule(
-                    "[bold sky_blue3]" + book_title + f" # manga/{specified_book}" + "[/bold sky_blue3]",
+                    "[bold sky_blue3]"
+                    + book_title
+                    + f" # manga/{specified_book}"
+                    + "[/bold sky_blue3]",
                     style="sky_blue3",
                 )
                 episodes = self.fuz_web.get_free_episodes(episodes_info)
                 rich.cnsl.print(
-                        SNORMAL
-                        + context.main_t("foundBook").format(freeComicNumber=len(episodes)),
-                        style="sky_blue3",
-                    )
+                    SNORMAL
+                    + context.main_t("foundBook").format(freeComicNumber=len(episodes)),
+                    style="sky_blue3",
+                )
                 for episode in episodes:
                     self.fuz_web.jump_to_manga_viewer(int(episode[0]))
                     self.fuz_web.download_book(mark=episode[1], subdir=book_title)
