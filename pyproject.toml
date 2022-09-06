@@ -15,7 +15,8 @@ rich = "^12.5.1"
 blessed = "^1.19.1"
 inquirer = "^2.10.0"
 PyYAML = "^6.0"
-blackboxprotobuf = "^1.0.1"
+protobuf = "^4.21.5"
+six = "^1.16.0"
 
 [tool.poetry.dev-dependencies]
 

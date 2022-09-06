@@ -41,7 +41,6 @@ class fuz_downloader:
             rich.cnsl.print("")
 
         rich.cnsl.print(SNORMAL + context.main_t("questDone"), style="sky_blue3")
-        self.fuz_web.driver.quit()
 
     def handle_catalog_url(self) -> None:
         specified_books = get_manga_url_select_result()
