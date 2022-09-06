@@ -168,7 +168,11 @@ def _encode_message_field(
         if "-" in field_number:
             field_number, alt_field_number = field_number.split("-")
         for number, info in typedef.items():
-            if info.get("name", "") != ""  and info["name"] == field_number and field_number != "":
+            if (
+                info.get("name", "") != ""
+                and info["name"] == field_number
+                and field_number != ""
+            ):
                 field_number = number
                 break
     else:
@@ -303,15 +307,11 @@ def decode_message(buf, config, typedef=None, pos=0, end=None, depth=0, path=Non
         field_typedef = typedef.get(field_number, {})
         field_key = _get_field_key(field_number, typedef, path)
         # Easy cases. Fixed size or bytes/string
-        if (
-            wire_type
-            in [
-                wire_format.WIRETYPE_FIXED32,
-                wire_format.WIRETYPE_FIXED64,
-                wire_format.WIRETYPE_VARINT,
-            ]
-            or ("type" in field_typedef and field_typedef["type"] != "message")
-        ):
+        if wire_type in [
+            wire_format.WIRETYPE_FIXED32,
+            wire_format.WIRETYPE_FIXED64,
+            wire_format.WIRETYPE_VARINT,
+        ] or ("type" in field_typedef and field_typedef["type"] != "message"):
 
             if "type" not in field_typedef:
                 field_typedef["type"] = config.get_default_type(wire_type)

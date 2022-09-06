@@ -440,7 +440,10 @@ def _json_safe_transform(values, typedef, toBytes, config=None):
             field_number = base_name
 
         if field_number not in typedef or "type" not in typedef[field_number]:
-            raise EncoderException("Field %r not found in typedef or does not have type attribute." % field_number)
+            raise EncoderException(
+                "Field %r not found in typedef or does not have type attribute."
+                % field_number
+            )
 
         field_type = typedef[field_number]["type"]
         if field_type == "message":
@@ -630,8 +633,9 @@ def _annotate_typedef(typedef, message):
 
         # Add a blank name field if the field doesn't have one, so it's easier
         # to add
-        if 'name' not in field_def:
-            field_def['name'] = ""
+        if "name" not in field_def:
+            field_def["name"] = ""
+
 
 def _strip_typedef_annotations(typedef):
     # Remove example values placed by _annotate_typedef

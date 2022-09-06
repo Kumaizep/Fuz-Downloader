@@ -90,7 +90,7 @@ def decode_uvarint(buf, pos):
 def encode_varint(value):
     """Encode a long or int into a bytearray."""
     output = bytearray()
-    if value > (2 ** 63) or value < -(2 ** 63):
+    if value > (2**63) or value < -(2**63):
         raise EncoderException("Value %d above maximum varint size" % value)
     try:
         encoder._EncodeSignedVarint(_gen_append_bytearray(output), value)
