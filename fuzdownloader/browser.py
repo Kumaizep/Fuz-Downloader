@@ -461,6 +461,27 @@ class fuz_browser:
             volumn_info.append(["7" in volumn.keys(), [volumn["1"], volumn["2"]]])
         return [message_json["2"], volumn_info]
 
+    # def filter_manga_detail(self, message_json):
+    #     episode_info = list()
+    #     volumns = message_json["props"]["pageProps"]["chapters"]
+    #     if type(volumns) is dict:
+    #         volumns = [volumns]
+    #     for volumn in volumns
+    #         if type(volumn["chapters"]) is dict:
+    #             volumn["chapters"] = [volumn["chapters"]]
+    #         for episode in volumn["chapters"]:
+    #             episode_info.append([len(episode["pointConsumption"]), [episode["chapterId"], episode["chapterMainName"]]])
+    #     return [message_json["props"]["pageProps"]["manga"]["mangaName"], episode_info]
+
+    # def filter_book_detail(self, message_json):
+    #     volumn_info = list()
+    #     volumns = message_json["props"]["pageProps"]["bookIssues"]
+    #     if type(volumns) is dict:
+    #         volumns = [volumns]
+    #     for volumn in volumns:
+    #         volumn_info.append(["isFreeCampaign" in volumn.keys(), [volumn["bookIssueId"], volumn["bookIssueName"]]])
+    #     return [message_json["props"]["pageProps"]["bookName"], volumn_info]
+
     def protobuf_request_decode(self, request_id):
         request_body = self.driver.execute_cdp_cmd(
             "Network.getResponseBody", {"requestId": request_id}

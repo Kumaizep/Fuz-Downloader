@@ -1,5 +1,7 @@
 import inquirer
 import json
+import os
+import platform
 import yaml
 
 from typing import List
@@ -142,3 +144,25 @@ def save_file(save_dir, page, data) -> None:
 def process_browser_log_entry(entry):
     response = json.loads(entry["message"])["message"]
     return response
+
+def try_execute_cmd(cmd):
+    try:
+        os.system(cmd)
+    except:
+        pass
+
+def open_sys_file_browser(dir) -> None:
+    system = platform.system()
+    platfm = platform.platform()
+    desktop = os.environ.get("DESKTOP_SESSION")
+    if system == "Windows":
+        try_execute_cmd(f"start {dir}")
+    elif system == "Darwin":
+        try_execute_cmd(f"open {dir}")
+    elif system == "Linux":
+        if "Mircosoft" in platfm:
+            try_execute_cmd(f"exe.cmd /C start {dir}")
+        elif desktop != None:
+            try_execute_cmd(f"xdg-open {dir}")
+        
+

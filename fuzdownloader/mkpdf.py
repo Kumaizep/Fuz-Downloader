@@ -15,7 +15,6 @@ def add_bookmark(path: str, bookmarks: List[List[str]], title: str) -> None:
     for page in range(reader.numPages):
         writer.addPage(reader.getPage(page))
     for bookmark in bookmarks:
-
         writer.addBookmark(bookmark[0], int(bookmark[1]) - 1)
     with open(path, "wb") as file:
         writer.write(file)
