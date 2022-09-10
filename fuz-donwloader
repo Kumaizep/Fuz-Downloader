@@ -1,4 +1,8 @@
-#!/bin/bash
+#!/bin/sh
+
+SRC_URL="https://github.com/Kumaizep/Fuz-Downloader/archive/refs/heads/dev.zip"
+SRC_ZIP="dev.zip"
+SRC_DIR="Fuz-Downloader-dev"
 
 Install () {
     currentver="$(python3 -V | cut -d" " -f2)"
@@ -17,10 +21,10 @@ Install () {
 
     mkdir -p ~/.fuz-downloader
     cd ~/.fuz-downloader
-    curl -LO https://github.com/Kumaizep/Fuz-Downloader/archive/refs/tags/latest.zip
-    unzip -o -d ~/.fuz-downloader latest.zip
-    rm latest.zip
-    cd Fuz-Downloader-latest
+    curl -LO $SRC_URL
+    unzip -o -d ~/.fuz-downloader $SRC_ZIP
+    rm $SRC_ZIP
+    cd $SRC_DIR
     poetry install
     echo "Install Done."
     echo "Try 'fuz-downloader -h' or 'fuz-downloader --help' for more information."
@@ -53,15 +57,16 @@ Help ()
 }
 
 Update() {
-    curl -LO https://github.com/Kumaizep/Fuz-Downloader/releases/download/latest/fuz-donwloader
+    curl -LO https://github.com/Kumaizep/Fuz-Downloader/releases/download/latest-dev/fuz-donwloader
     chmod +x fuz-donwloader
     mv fuz-donwloader ~/.local/bin
+
     mkdir -p ~/.fuz-downloader
     cd ~/.fuz-downloader
-    curl -LO https://github.com/Kumaizep/Fuz-Downloader/archive/refs/tags/latest.zip
-    unzip -o -d ~/.fuz-downloader latest.zip
-    rm latest.zip
-    cd Fuz-Downloader-latest
+    curl -LO $SRC_URL
+    unzip -o -d ~/.fuz-downloader $SRC_ZIP
+    rm $SRC_ZIP
+    cd $SRC_DIR
     poetry install
     echo "Update Done."
     echo "Try 'fuz-downloader -h' or 'fuz-downloader --help' for more information."
@@ -89,7 +94,7 @@ while [ True ]; do
         Update
         exit
     elif [ "$1" = "" ]; then
-        cd ~/.fuz-downloader/Fuz-Downloader-latest
+        cd ~/.fuz-downloader/Fuz-Downloader-dev
         poetry run fuzdownloader $OPTION
         exit
     else
