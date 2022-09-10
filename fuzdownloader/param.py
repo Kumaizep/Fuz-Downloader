@@ -83,12 +83,12 @@ class Param(object):
             ) as stream:
                 data = yaml.load(stream, Loader=yaml.FullLoader)
         except:
-            data = os.path.abspath(os.path.expanduser(self.DEFAULT_OUTPUT_SETTING))
+            data = self.DEFAULT_OUTPUT_SETTING
             with open(
                 self.DATA_DIR + "/output-setting.yaml", "w", encoding="utf8"
             ) as stream:
                 yaml.dump(data, stream, Dumper=yaml.Dumper)
-        return data["dir"]
+        return os.path.abspath(os.path.expanduser(data["dir"]))
 
     def set_output_directory(self, dir: str) -> None:
         data = {"dir": os.path.abspath(os.path.expanduser(dir))}
