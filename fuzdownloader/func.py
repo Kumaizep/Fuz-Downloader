@@ -64,7 +64,9 @@ def get_reader_url_select_result() -> List[int]:
                     )
                     need_select = True
         except:
-            rich.cnsl.print(param.SWARNING + context.func_t("invalidFormat"), style="orange1")
+            rich.cnsl.print(
+                param.SWARNING + context.func_t("invalidFormat"), style="orange1"
+            )
     result.sort()
     return result
 
@@ -97,7 +99,9 @@ def get_manga_url_select_result() -> List[int]:
                     )
                     need_select = True
         except:
-            rich.cnsl.print(param.SWARNING + context.func_t("invalidFormat"), style="orange1")
+            rich.cnsl.print(
+                param.SWARNING + context.func_t("invalidFormat"), style="orange1"
+            )
     result.sort()
     return result
 
@@ -145,11 +149,13 @@ def process_browser_log_entry(entry):
     response = json.loads(entry["message"])["message"]
     return response
 
+
 def try_execute_cmd(cmd):
     try:
         os.system(cmd)
     except:
         pass
+
 
 def open_sys_file_browser(dir) -> None:
     system = platform.system()
@@ -164,5 +170,3 @@ def open_sys_file_browser(dir) -> None:
             try_execute_cmd(f"exe.cmd /C start {dir}")
         elif desktop != None:
             try_execute_cmd(f"xdg-open {dir}")
-        
-

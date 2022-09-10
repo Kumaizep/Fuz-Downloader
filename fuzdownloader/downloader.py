@@ -51,7 +51,6 @@ class fuz_downloader:
             else:
                 open_sys_file_browser(param.OUTPUT_DIR)
 
-
     def handle_catalog_url(self) -> int:
         download_count = 0
         specified_books = get_manga_url_select_result()

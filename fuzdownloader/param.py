@@ -4,13 +4,19 @@ import yaml
 
 from .theme import *
 
+
 class Param(object):
     """docstring for param"""
+
     def __init__(self):
-        self.DEFAULT_LANGUAGE_SETTING = {"language": "ja-JP", "list": ["en-US", "ja-JP", "zh-TW"]}
+        self.DEFAULT_LANGUAGE_SETTING = {
+            "language": "ja-JP",
+            "list": ["en-US", "ja-JP", "zh-TW"],
+        }
         self.DEFAULT_OUTPUT_SETTING = {"dir": "./output"}
 
-        self.DATA_DIR = "./data"
+        self.CONTEXT_DIR = "./data/context"
+        self.DATA_DIR = "./data/user"
         self.DEBUG_MODE = False
         self.IMG_SIZE = (1350, 1938)
         self.LANGUAGUE = self.load_language()
@@ -39,7 +45,9 @@ class Param(object):
                     choices=["ja-JP", "zh-TW", "en-US"],
                 )
             ]
-            data["language"] = inquirer.prompt(questions, theme=DefaultTheme())["language"]
+            data["language"] = inquirer.prompt(questions, theme=DefaultTheme())[
+                "language"
+            ]
             with open(
                 self.DATA_DIR + "/language-setting.yaml", "w", encoding="utf8"
             ) as stream:
@@ -56,7 +64,11 @@ class Param(object):
                     yaml.dump(self.LANGUAGUE, stream, Dumper=yaml.Dumper)
                 print("[#] Message: Successfully set the language to " + language)
             except:
-                print("[X] Error: Write " + self.DATA_DIR + "/language-setting.yaml failed")
+                print(
+                    "[X] Error: Write "
+                    + self.DATA_DIR
+                    + "/language-setting.yaml failed"
+                )
         else:
             print("[x] Error: Set language failed: invalid language.")
 
@@ -82,5 +94,6 @@ class Param(object):
             yaml.dump(data, stream, Dumper=yaml.Dumper)
         print("[#] Message: Successfully set the language to " + data["dir"])
         self.OUTPUT_DIR = data["dir"]
+
 
 param = Param()

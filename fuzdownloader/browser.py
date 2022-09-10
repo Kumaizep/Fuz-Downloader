@@ -35,7 +35,9 @@ class fuz_browser:
 
     def __init__(self) -> None:
         rich.cnsl.rule(
-            "[bold sky_blue3]" + context.browser_t("mainTitle").format(versionNumber=param.VERSION) + "[/bold sky_blue3]",
+            "[bold sky_blue3]"
+            + context.browser_t("mainTitle").format(versionNumber=param.VERSION)
+            + "[/bold sky_blue3]",
             style="sky_blue3",
         )
         options = Options()
@@ -75,7 +77,9 @@ class fuz_browser:
             ]
             self.account = inquirer.prompt(questions, theme=DefaultTheme())
             self.try_login()
-        rich.cnsl.print(param.SNORMAL + context.browser_t("loginSuccess"), style="sky_blue3")
+        rich.cnsl.print(
+            param.SNORMAL + context.browser_t("loginSuccess"), style="sky_blue3"
+        )
         save_account_info(self.account)
         time.sleep(1)
 
@@ -136,7 +140,9 @@ class fuz_browser:
 
         if skip:
             rich.cnsl.print(
-                param.SNORMAL + context.browser_t("autoSelector") + books_title_list[0][0],
+                param.SNORMAL
+                + context.browser_t("autoSelector")
+                + books_title_list[0][0],
                 style="sky_blue3",
             )
             return [0]

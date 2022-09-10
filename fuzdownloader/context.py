@@ -11,12 +11,18 @@ class Context:
         language = param.LANGUAGUE["language"]
         try:
             with open(
-                param.DATA_DIR + "/context-" + language + ".yaml", "r", encoding="utf8"
+                param.CONTEXT_DIR + "/context-" + language + ".yaml",
+                "r",
+                encoding="utf8",
             ) as stream:
                 self.text = yaml.load(stream, Loader=yaml.FullLoader)
         except:
             print(
-                "[x] Error: Read " + param.DATA_DIR + "/context-" + language + ".yaml failed"
+                "[x] Error: Read "
+                + param.CONTEXT_DIR
+                + "/context-"
+                + language
+                + ".yaml failed"
             )
             raise
 
