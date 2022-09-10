@@ -55,7 +55,7 @@ For Output Directory Setting:
 
 ### Using script
 
-Useage: fuzdownloader [Option] [Argument].
-Try 'fuz-downloader -h' or 'fuz-downloader --help' for more information.
+Useage: `fuzdownloader [Option] [Argument]`.
+Try `fuz-downloader -h` or `fuz-downloader --help` for more information.
 
 
