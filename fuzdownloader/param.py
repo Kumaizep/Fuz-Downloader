@@ -10,8 +10,6 @@ class Param(object):
     """docstring for param"""
 
     def __init__(self):
-        Path(param.DATA_DIR).mkdir(parents=True, exist_ok=True)
-
         self.DEFAULT_LANGUAGE_SETTING = {
             "language": "ja-JP",
             "list": ["en-US", "ja-JP", "zh-TW"],
@@ -22,9 +20,11 @@ class Param(object):
         self.DATA_DIR = "./data/user"
         self.DEBUG_MODE = False
         self.IMG_SIZE = (1350, 1938)
+        self.VERSION = "1.1.0"
+
+        Path(param.DATA_DIR).mkdir(parents=True, exist_ok=True)   
         self.LANGUAGUE = self.load_language()
         self.OUTPUT_DIR = self.load_output_directory()
-        self.VERSION = "1.1.0"
 
         self.SINDENT = "　　"
         self.SINPUT = "[[orange1]?[/orange1]] "
