@@ -4,7 +4,7 @@ main:
     questDone: 'クエスト完了'
 
 browser:
-    mainTitle: '< Fuz-Downloader v0.1.0 >'
+    mainTitle: '< Fuz-Downloader v{versionNumber} >'
     accountInfoError: 'メールアドレス、もしくはパスワードを間違えています。再入力してください。'
     accountAddress: 'メールアドレス'
     accountPassword: 'パスワード'

@@ -52,19 +52,19 @@ def get_reader_url_select_result() -> List[int]:
             result = list(
                 map(
                     int,
-                    rich.cnsl.input(SINPUT + context.func_t("urlNumber")).split(),
+                    rich.cnsl.input(param.SINPUT + context.func_t("urlNumber")).split(),
                 )
             )
             need_select = False
             for i in result:
                 if i < 0:
                     rich.cnsl.print(
-                        SWARNING + context.func_t("invalidChoice") + str(i),
+                        param.SWARNING + context.func_t("invalidChoice") + str(i),
                         style="orange1",
                     )
                     need_select = True
         except:
-            rich.cnsl.print(SWARNING + context.func_t("invalidFormat"), style="orange1")
+            rich.cnsl.print(param.SWARNING + context.func_t("invalidFormat"), style="orange1")
     result.sort()
     return result
 
@@ -85,25 +85,25 @@ def get_manga_url_select_result() -> List[int]:
             result = list(
                 map(
                     int,
-                    rich.cnsl.input(SINPUT + context.func_t("urlNumber")).split(),
+                    rich.cnsl.input(param.SINPUT + context.func_t("urlNumber")).split(),
                 )
             )
             need_select = False
             for i in result:
                 if i < 0:
                     rich.cnsl.print(
-                        SWARNING + context.func_t("invalidChoice") + str(i),
+                        param.SWARNING + context.func_t("invalidChoice") + str(i),
                         style="orange1",
                     )
                     need_select = True
         except:
-            rich.cnsl.print(SWARNING + context.func_t("invalidFormat"), style="orange1")
+            rich.cnsl.print(param.SWARNING + context.func_t("invalidFormat"), style="orange1")
     result.sort()
     return result
 
 
 # def get_account_info() -> List[str]:
-#     path = DATA_DIR + "/account"
+#     path = param.DATA_DIR + "/account"
 #     if exists(path):
 #         with open(path, "r") as file:
 #             data = file.readlines()
@@ -114,7 +114,7 @@ def get_manga_url_select_result() -> List[int]:
 #         password = input("パスワード： ")
 #         return [address, password]
 def get_account_info():
-    path = DATA_DIR + "/account.yaml"
+    path = param.DATA_DIR + "/account.yaml"
     if exists(path):
         with open(path, "r", encoding="utf8") as stream:
             data = yaml.load(stream, Loader=yaml.FullLoader)
@@ -130,8 +130,8 @@ def get_account_info():
 
 
 def save_account_info(account) -> None:
-    Path(DATA_DIR).mkdir(parents=True, exist_ok=True)
-    with open(DATA_DIR + "/account.yaml", "w", encoding="utf8") as stream:
+    Path(param.DATA_DIR).mkdir(parents=True, exist_ok=True)
+    with open(param.DATA_DIR + "/account.yaml", "w", encoding="utf8") as stream:
         yaml.dump(account, stream, Dumper=yaml.Dumper)
 
 

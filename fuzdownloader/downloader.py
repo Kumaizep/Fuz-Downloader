@@ -14,7 +14,8 @@ class fuz_downloader:
     """docstring for fuz_downloader"""
 
     def __init__(self) -> None:
-        Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
+        Path(param.OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
+        context.get_context()
         # Open Fuz Comic web with browser.
         self.fuz_web = fuz_browser()
 
@@ -43,12 +44,12 @@ class fuz_downloader:
             download_count = download_count + count
             rich.cnsl.print("")
 
-        rich.cnsl.print(SNORMAL + context.main_t("questDone"), style="sky_blue3")
+        rich.cnsl.print(param.SNORMAL + context.main_t("questDone"), style="sky_blue3")
         if download_count > 0:
-            if DEBUG_MODE == True:
+            if param.DEBUG_MODE == True:
                 rich.cnsl.print("Downloaded: {Num}".format(Num=download_count))
             else:
-                open_sys_file_browser(OUTPUT_DIR)
+                open_sys_file_browser(param.OUTPUT_DIR)
 
 
     def handle_catalog_url(self) -> int:
@@ -61,7 +62,7 @@ class fuz_downloader:
                 self.fuz_web.jump_to_book_catalog(specified_book)
                 if not self.fuz_web.is_page_exist():
                     rich.cnsl.print(
-                        SWARNING
+                        param.SWARNING
                         + context.main_t("500NotFound").format(
                             urlNumber=specified_book
                         ),
@@ -83,7 +84,7 @@ class fuz_downloader:
                     )
                     volumns = self.fuz_web.get_free_volumns(volumn_info)
                     rich.cnsl.print(
-                        SNORMAL
+                        param.SNORMAL
                         + context.main_t("foundBook").format(
                             freeComicNumber=len(volumns)
                         ),
@@ -109,7 +110,7 @@ class fuz_downloader:
                 )
                 episodes = self.fuz_web.get_free_episodes(episodes_info)
                 rich.cnsl.print(
-                    SNORMAL
+                    param.SNORMAL
                     + context.main_t("foundBook").format(freeComicNumber=len(episodes)),
                     style="sky_blue3",
                 )
@@ -129,7 +130,7 @@ class fuz_downloader:
                 self.fuz_web.jump_to_book_viewer(specified_book)
                 if not self.fuz_web.is_page_exist():
                     rich.cnsl.print(
-                        SWARNING
+                        param.SWARNING
                         + context.main_t("500NotFound").format(
                             urlNumber=specified_book
                         ),

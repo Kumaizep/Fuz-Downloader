@@ -1,14 +1,21 @@
 import sys
-from .context import *
+from .param import *
 from .downloader import *
 
 
 def main() -> None:
     skip_sele = False
-    if len(sys.argv) >= 2 and sys.argv[1] == "new":
-        skip_sele = True
-    if len(sys.argv) >= 3 and sys.argv[1] == "set-lang":
-        context.set_languague(sys.argv[2])
+    argv_offset = 1
+    while len(sys.argv) > argv_offset:
+        if len(sys.argv) >= argv_offset + 1 and sys.argv[argv_offset] == "new":
+            skip_sele = True
+            argv_offset += 1
+        elif len(sys.argv) >= argv_offset + 2 and sys.argv[argv_offset] == "set-lang":
+            param.set_languague(sys.argv[argv_offset + 1])
+            argv_offset += 2
+        elif len(sys.argv) >= argv_offset + 2 and sys.argv[argv_offset] == "set-dir":
+            param.set_output_directory(sys.argv[argv_offset + 1])
+            argv_offset += 2
 
     fuzdl = fuz_downloader()
     fuzdl.run(skip_sele)
