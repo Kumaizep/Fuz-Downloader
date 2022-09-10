@@ -8,9 +8,9 @@ Install () {
     currentver="$(python3 -V | cut -d" " -f2)"
     requiredver="3.10.0"
 
-    if [ ! command -v poetry &> /dev/null ]; then
+    if ! [ command -v poetry &> /dev/null ]; then
         echo "[#] Poetry not found"
-        if [ ! command -v python &> /dev/null ]; then
+        if ! [ command -v python &> /dev/null ]; then
             echo "Could not find python or the version is too old."
             exit
         elif [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then
