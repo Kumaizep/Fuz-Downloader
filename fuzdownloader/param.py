@@ -23,7 +23,7 @@ class Param(object):
         self.IMG_SIZE = (1350, 1938)
         self.VERSION = "1.1.0"
 
-        Path(param.DATA_DIR).mkdir(parents=True, exist_ok=True)   
+        Path(self.DATA_DIR).mkdir(parents=True, exist_ok=True)   
         self.LANGUAGUE = self.load_language()
         self.OUTPUT_DIR = self.load_output_directory()
 
