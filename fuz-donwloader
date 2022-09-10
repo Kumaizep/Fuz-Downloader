@@ -1,0 +1,101 @@
+#!/bin/bash
+
+Install () {
+    currentver="$(python3 -V | cut -d" " -f2)"
+    requiredver="3.10.0"
+
+    if [ ! command -v poetry &> /dev/null ]; then
+        if [ ! command -v python &> /dev/null ]; then
+            echo "Could not find python or the version is too old."
+            exit
+        elif [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then
+            echo "Could not find python or the version is too old."
+            exit
+        fi
+        curl -sSL https://install.python-poetry.org | python3 -
+    fi
+
+    mkdir -p ~/.fuz-downloader
+    cd ~/.fuz-downloader
+    curl -LO https://github.com/Kumaizep/Fuz-Downloader/archive/refs/tags/latest.zip
+    unzip -o -d ~/.fuz-downloader latest.zip
+    rm latest.zip
+    cd Fuz-Downloader-latest
+    poetry install
+    echo "Install Done."
+    echo "Try 'fuz-downloader -h' or 'fuz-downloader --help' for more information."
+}
+
+Help ()
+{
+    # Display Help
+    echo "Useage: fuzdownloader [Option] [Argument]"
+    echo "Options and arguments (and corresponding environment variables):"
+    echo "-i, --install           : Install fuzdownloader to your computer."
+    echo "                          Argument: None"
+    echo "-h, --help              : Print this help message and exit"
+    echo "                          Argument: None"
+    echo "-n, --new               : Downloading only the latest issue of the latest magazine."
+    echo "                          Argument: None"
+    echo "                          Note: If the login account does not have the viewing permission"
+    echo "                                of the magazine, it will switch to the viewer download mode."
+    echo "-sd, --set-directory    : Set the default output directory to the specified dictionary"
+    echo "                          and run the downloader."
+    echo "                          Argument: [path]"
+    echo "                          Example: fuzdownloader -sd /home/user/document/fuz"
+    echo "                          Note: The default output directory is ~/.fuz-downloader/output"
+    echo "-sl, --set-languague    : Set the default interface language to the specified language"
+    echo "                          and run the downloader."
+    echo "                          Argument: [language code]"
+    echo "                          Example: fuzdownloader -sl en-US"
+    echo "-u, --update            : Update fuzdownloader to your computer."
+    echo "                          Argument: None"
+}
+
+Update() {
+    curl -LO https://github.com/Kumaizep/Fuz-Downloader/releases/download/latest/fuz-donwloader
+    chmod +x fuz-donwloader
+    mv fuz-donwloader ~/.local/bin
+    mkdir -p ~/.fuz-downloader
+    cd ~/.fuz-downloader
+    curl -LO https://github.com/Kumaizep/Fuz-Downloader/archive/refs/tags/latest.zip
+    unzip -o -d ~/.fuz-downloader latest.zip
+    rm latest.zip
+    cd Fuz-Downloader-latest
+    poetry install
+    echo "Update Done."
+    echo "Try 'fuz-downloader -h' or 'fuz-downloader --help' for more information."
+}
+
+OPTION=""
+
+while [ True ]; do
+    if [ "$1" = "--install" -o "$1" = "-i" ]; then
+        Install
+        exit
+    elif [ "$1" = "--help" -o "$1" = "-h" ]; then
+        Help
+        exit
+    elif [ "$1" = "--new" -o "$1" = "-n" ]; then
+        OPTION=$OPTION" new"
+        shift 1
+    elif [ "$1" = "--set-languague" -o "$1" = "-sl" ]; then
+        OPTION=$OPTION" set-lang "$2
+        shift 2
+    elif [ "$1" = "--set-directory" -o "$1" = "-sd" ]; then
+        OPTION=$OPTION" set-dir "$2
+        shift 2
+    elif [ "$1" = "--update" -o "$1" = "-u" ]; then
+        Update
+        exit
+    elif [ "$1" = "" ]; then
+        cd ~/.fuz-downloader/Fuz-Downloader-latest
+        poetry run fuzdownloader $OPTION
+        exit
+    else
+        echo "Unknown option: " $1
+        echo "Try 'fuz-downloader -h' or 'fuz-downloader --help' for more information."
+        exit
+    fi
+done
+

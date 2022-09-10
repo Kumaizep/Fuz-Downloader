@@ -1,5 +1,6 @@
 import inquirer
 import os
+import sys
 import yaml
 
 from .theme import *
