@@ -4,7 +4,7 @@ main:
     questDone: '任務完成'
 
 browser:
-    mainTitle: '< Fuz-Downloader v0.1.0 >'
+    mainTitle: '< Fuz-Downloader v{versionNumber} >'
     accountInfoError: '電子郵件或是密碼出現錯誤。請重新輸入。'
     accountAddress: '電子郵件'
     accountPassword: '密碼'

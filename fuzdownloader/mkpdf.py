@@ -15,7 +15,6 @@ def add_bookmark(path: str, bookmarks: List[List[str]], title: str) -> None:
     for page in range(reader.numPages):
         writer.addPage(reader.getPage(page))
     for bookmark in bookmarks:
-
         writer.addBookmark(bookmark[0], int(bookmark[1]) - 1)
     with open(path, "wb") as file:
         writer.write(file)
@@ -24,7 +23,7 @@ def add_bookmark(path: str, bookmarks: List[List[str]], title: str) -> None:
 def make_pdf(
     save_dir: str, title: str, page_num: int, bookmarks=[["-1", "-1"]]
 ) -> None:
-    img_dir = OUTPUT_DIR + "/" + "TEMP" + title
+    img_dir = param.OUTPUT_DIR + "/" + "TEMP" + title
     pdf_path = save_dir + "/" + title + ".pdf"
     images = [img_dir + "/" + str(pn) + ".jpeg" for pn in range(page_num)]
     dpix = dpiy = 200

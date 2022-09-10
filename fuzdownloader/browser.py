@@ -35,11 +35,13 @@ class fuz_browser:
 
     def __init__(self) -> None:
         rich.cnsl.rule(
-            "[bold sky_blue3]" + context.browser_t("mainTitle") + "[/bold sky_blue3]",
+            "[bold sky_blue3]"
+            + context.browser_t("mainTitle").format(versionNumber=param.VERSION)
+            + "[/bold sky_blue3]",
             style="sky_blue3",
         )
         options = Options()
-        if not DEBUG_MODE:
+        if not param.DEBUG_MODE:
             options.add_argument("--headless")
         caps = DesiredCapabilities.CHROME
         caps["goog:loggingPrefs"] = {"performance": "ALL"}
@@ -63,7 +65,7 @@ class fuz_browser:
         while self.is_alert_present() or self.is_empty_input():
             self.driver.refresh()
             rich.cnsl.print(
-                SWARNING + context.browser_t("accountInfoError"), style="orange1"
+                param.SWARNING + context.browser_t("accountInfoError"), style="orange1"
             )
             questions = [
                 inquirer.Text(
@@ -75,7 +77,9 @@ class fuz_browser:
             ]
             self.account = inquirer.prompt(questions, theme=DefaultTheme())
             self.try_login()
-        rich.cnsl.print(SNORMAL + context.browser_t("loginSuccess"), style="sky_blue3")
+        rich.cnsl.print(
+            param.SNORMAL + context.browser_t("loginSuccess"), style="sky_blue3"
+        )
         save_account_info(self.account)
         time.sleep(1)
 
@@ -96,7 +100,7 @@ class fuz_browser:
                 return True
             else:
                 rich.cnsl.print(
-                    SNORMAL + context.browser_t("waitAMoment"), style="sky_blue2"
+                    param.SNORMAL + context.browser_t("waitAMoment"), style="sky_blue2"
                 )
                 alert.accept()
                 time.sleep(10)
@@ -136,7 +140,9 @@ class fuz_browser:
 
         if skip:
             rich.cnsl.print(
-                SNORMAL + context.browser_t("autoSelector") + books_title_list[0][0],
+                param.SNORMAL
+                + context.browser_t("autoSelector")
+                + books_title_list[0][0],
                 style="sky_blue3",
             )
             return [0]
@@ -194,13 +200,12 @@ class fuz_browser:
     def download_book(self, mark="", subdir="") -> None:
         title = self.get_book_title(mark)
         save_dir = self.gen_save_dir(title[1], subdir.replace("/", "／"))
-        full_path = os.path.abspath(os.getcwd()) + save_dir[1:]
 
         rich.cnsl.print("[+] " + title[0][:60] + "：", style="sky_blue3")
 
         if self.is_book_exist(save_dir, title[0]):
             rich.cnsl.print(
-                SINDENT + context.browser_t("pdfExisted"), style="sky_blue3"
+                param.SINDENT + context.browser_t("pdfExisted"), style="sky_blue3"
             )
             return
 
@@ -209,12 +214,12 @@ class fuz_browser:
         bookmarks = self.get_bookmarks()
 
         make_pdf(save_dir, title[0], page_num, bookmarks)
-        shutil.rmtree(OUTPUT_DIR + "/" + "TEMP" + title[0])
+        shutil.rmtree(param.OUTPUT_DIR + "/" + "TEMP" + title[0])
 
         rich.update_single_progress(content=context.browser_t("progressDone"))
         rich.terminal_single_progress()
         styled_full_path = (
-            "[light_steel_blue underline]" + full_path + "[/light_steel_blue underline]"
+            "[light_steel_blue underline]" + save_dir + "[/light_steel_blue underline]"
         )
         rich.padding_4(
             context.browser_t("pdfSaved").format(save_path=styled_full_path),
@@ -222,7 +227,7 @@ class fuz_browser:
             style="sky_blue3",
         )
         # rich.cnsl.print(
-        #     SINDENT + context.browser_t("pdfSaved").format(save_path=styled_full_path),
+        #     param.SINDENT + context.browser_t("pdfSaved").format(save_path=styled_full_path),
         #     style="sky_blue3"
         # )
 
@@ -236,7 +241,7 @@ class fuz_browser:
         return [title.replace("/", "／"), origin_title.replace("/", "／")]
 
     def gen_save_dir(self, origin_title: str, subdir: str) -> str:
-        save_dir = OUTPUT_DIR
+        save_dir = param.OUTPUT_DIR
         if subdir == "@@RESERVED_AS_TITLE_LA":
             subdir = origin_title
         elif subdir == "@@RESERVED_AS_BOOK_TITLE_LA":
@@ -256,7 +261,7 @@ class fuz_browser:
     def load_book(self, title: str, need_load=True) -> int:
         page_num = self.init_book()
 
-        save_dir = OUTPUT_DIR + "/" + "TEMP" + title
+        save_dir = param.OUTPUT_DIR + "/" + "TEMP" + title
         Path(save_dir).mkdir(parents=True, exist_ok=True)
 
         if need_load:
@@ -402,10 +407,10 @@ class fuz_browser:
             time.sleep(0.5)
             return self.get_manga_detail_request()
         elif len(events) > 1:
-            if DEBUG_MODE:
+            if param.DEBUG_MODE:
                 events_id = [event["params"]["requestId"] for event in events]
                 rich.cnsl.print(
-                    SWARNING + "Get multiple manga_detail request! ",
+                    param.SWARNING + "Get multiple manga_detail request! ",
                     style="red1",
                     end="",
                 )
@@ -420,10 +425,10 @@ class fuz_browser:
             time.sleep(0.5)
             return self.get_book_detail_request()
         elif len(events) > 1:
-            if DEBUG_MODE:
+            if param.DEBUG_MODE:
                 events_id = [event["params"]["requestId"] for event in events]
                 rich.cnsl.print(
-                    SWARNING + "Get multiple book_detail request! ",
+                    param.SWARNING + "Get multiple book_detail request! ",
                     style="red1",
                     end="",
                 )
@@ -460,6 +465,27 @@ class fuz_browser:
         for volumn in message_json["4"]:
             volumn_info.append(["7" in volumn.keys(), [volumn["1"], volumn["2"]]])
         return [message_json["2"], volumn_info]
+
+    # def filter_manga_detail(self, message_json):
+    #     episode_info = list()
+    #     volumns = message_json["props"]["pageProps"]["chapters"]
+    #     if type(volumns) is dict:
+    #         volumns = [volumns]
+    #     for volumn in volumns
+    #         if type(volumn["chapters"]) is dict:
+    #             volumn["chapters"] = [volumn["chapters"]]
+    #         for episode in volumn["chapters"]:
+    #             episode_info.append([len(episode["pointConsumption"]), [episode["chapterId"], episode["chapterMainName"]]])
+    #     return [message_json["props"]["pageProps"]["manga"]["mangaName"], episode_info]
+
+    # def filter_book_detail(self, message_json):
+    #     volumn_info = list()
+    #     volumns = message_json["props"]["pageProps"]["bookIssues"]
+    #     if type(volumns) is dict:
+    #         volumns = [volumns]
+    #     for volumn in volumns:
+    #         volumn_info.append(["isFreeCampaign" in volumn.keys(), [volumn["bookIssueId"], volumn["bookIssueName"]]])
+    #     return [message_json["props"]["pageProps"]["bookName"], volumn_info]
 
     def protobuf_request_decode(self, request_id):
         request_body = self.driver.execute_cdp_cmd(

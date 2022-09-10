@@ -4,7 +4,7 @@ main:
     questDone: 'Quest Done'
 
 browser:
-    mainTitle: '< Fuz-Downloader v0.1.0 >'
+    mainTitle: '< Fuz-Downloader v{versionNumber} >'
     accountInfoError: 'Wrong email address or password. Please re-enter.'
     accountAddress: 'Email address'
     accountPassword: 'Password'

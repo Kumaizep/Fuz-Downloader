@@ -41,7 +41,7 @@ class RichConsole:
         )
         self.single_progress.start()
         self.single_progress_task_id = self.single_progress.add_task(
-            SINDENT + content, total=total
+            param.SINDENT + content, total=total
         )
 
     def update_single_progress(self, content="", advance=0) -> None:

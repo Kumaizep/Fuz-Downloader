@@ -1,7 +1,5 @@
 output/*
 __pycache__
-data/account.yaml
-data/account.tmp.yaml
-data/language-setting.yaml
+data/user
 
 .direnv
