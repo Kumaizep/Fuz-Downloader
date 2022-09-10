@@ -10,9 +10,11 @@ This program is written in Python and tested in version `3.10.5`.It is recommend
 ### Manual installation
 
 Download the zip file from [here](https://github.com/Kumaizep/Fuz-downloader/archive/refs/heads/main.zip) and unzip it anywhere you want. You might need to install `Poetry` to manage and execute it.
-	- One simple (but not recommended) way to install Poetry is by using `pip`:
-		`pip install poerty`
-	- For other methods, see [here](https://python-poetry.org/docs/#installing-with-the-official-installer)
+
+- One simple (but not recommended) way to install Poetry is by using `pip`:
+	`pip install poerty`
+	
+- For other methods, see [here](https://python-poetry.org/docs/#installing-with-the-official-installer)
 
 
 ### Script installation (Experimental)

@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
-SRC_URL="https://github.com/Kumaizep/Fuz-Downloader/archive/refs/heads/dev.zip"
-SRC_ZIP="dev.zip"
-SRC_DIR="Fuz-Downloader-dev"
+SRC_URL="https://github.com/Kumaizep/Fuz-Downloader/archive/refs/heads/main.zip"
+SRC_ZIP="main.zip"
+SRC_DIR="Fuz-Downloader-main"
 
 Install () {
     currentver="$(python3 -V | cut -d" " -f2)"
