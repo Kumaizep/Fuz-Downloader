@@ -1,7 +1,7 @@
 # Fuz-Downloader
 A python-based CLI interactive program for downloading viewable comics from COMIC FUZ.
 
-## Intro
+## Introduction
 
 This program is written in Python and tested in version `3.10.5`.It is recommended to run with a version no earlier than this one. It mainly depends on `selenium`, `webdriver_manager` manager, and several other libraries, and use `Poetry` to manage dependency, please confirm that `Poetry` has been installed.
 
@@ -16,9 +16,9 @@ Download the zip file from [here](https://github.com/Kumaizep/Fuz-downloader/arc
 
 
 ### Script installation (Experimental)
-	```
-	curl -LO https://github.com/Kumaizep/Fuz-Downloader/releases/download/latest-dev/fuz-donwloader && chmod +x fuz-donwloader && mv fuz-donwloader ~/.local/bin && fuz-donwloader -i
-	```
+```
+curl -LO https://github.com/Kumaizep/Fuz-Downloader/releases/download/latest-dev/fuz-donwloader && chmod +x fuz-donwloader && mv fuz-donwloader ~/.local/bin && fuz-donwloader -i
+```
 
 
 ## Usage
