@@ -21,6 +21,7 @@ Download the zip file from [here](https://github.com/Kumaizep/Fuz-downloader/arc
 ```
 curl -LO https://github.com/Kumaizep/Fuz-Downloader/releases/download/latest-dev/fuz-donwloader && chmod +x fuz-donwloader && sudo mv fuz-donwloader /usr/local/bin && fuz-donwloader -i
 ```
+Note: It is recommended to make sure that `python`, `curl` and `unzip` have been installed in your machine before execution, and the version of `python` is above `3.10`. If not, install them first.
 
 
 ## Usage

@@ -43,7 +43,7 @@ wcwidth = ">=0.1.4"
 
 [[package]]
 name = "certifi"
-version = "2022.6.15"
+version = "2022.6.15.1"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "main"
 optional = false
@@ -271,7 +271,7 @@ diagrams = ["railroad-diagrams", "jinja2"]
 
 [[package]]
 name = "pypdf2"
-version = "2.10.5"
+version = "2.10.6"
 description = "A pure-python PDF library capable of splitting, merging, cropping, and transforming PDF files"
 category = "main"
 optional = false
@@ -512,8 +512,8 @@ blessed = [
     {file = "blessed-1.19.1.tar.gz", hash = "sha256:9a0d099695bf621d4680dd6c73f6ad547f6a3442fbdbe80c4b1daa1edbc492fc"},
 ]
 certifi = [
-    {file = "certifi-2022.6.15-py3-none-any.whl", hash = "sha256:fe86415d55e84719d75f8b69414f6438ac3547d2078ab91b67e779ef69378412"},
-    {file = "certifi-2022.6.15.tar.gz", hash = "sha256:84c85a9078b11105f04f3036a9482ae10e4621616db313fe045dd24743a0820d"},
+    {file = "certifi-2022.6.15.1-py3-none-any.whl", hash = "sha256:43dadad18a7f168740e66944e4fa82c6611848ff9056ad910f8f7a3e46ab89e0"},
+    {file = "certifi-2022.6.15.1.tar.gz", hash = "sha256:cffdcd380919da6137f76633531a5817e3a9f268575c128249fb637e4f9e73fb"},
 ]
 cffi = [
     {file = "cffi-1.15.1-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:a66d3508133af6e8548451b25058d5812812ec3798c886bf38ed24a98216fab2"},
@@ -827,8 +827,8 @@ pyparsing = [
     {file = "pyparsing-3.0.9.tar.gz", hash = "sha256:2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb"},
 ]
 pypdf2 = [
-    {file = "PyPDF2-2.10.5-py3-none-any.whl", hash = "sha256:ad48e18a3b93de2a769e7d70b025baea8060c3f31829b83b031d842125f059b6"},
-    {file = "PyPDF2-2.10.5.tar.gz", hash = "sha256:a568453329f8ad73bb001bcf70fd2fd97ec6525669c54552b2b9e99c2e469459"},
+    {file = "PyPDF2-2.10.6-py3-none-any.whl", hash = "sha256:6315e7a6bd49afd695925c243d72876e2dbfb774ecd551b3115e87d18df29599"},
+    {file = "PyPDF2-2.10.6.tar.gz", hash = "sha256:9122a6441f6c10b92b0262a95f9c04f552fe4498f26e7dc6e3d26fc0a58153ce"},
 ]
 pysocks = [
     {file = "PySocks-1.7.1-py27-none-any.whl", hash = "sha256:08e69f092cc6dbe92a0fdd16eeb9b9ffbc13cadfe5ca4c7bd92ffb078b293299"},
