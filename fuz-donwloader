@@ -59,7 +59,7 @@ Help ()
 Update() {
     curl -LO https://github.com/Kumaizep/Fuz-Downloader/releases/download/latest-dev/fuz-donwloader
     chmod +x fuz-donwloader
-    mv fuz-donwloader ~/.local/bin
+    sudo mv fuz-donwloader /usr/local/bin
 
     mkdir -p ~/.fuz-downloader
     cd ~/.fuz-downloader

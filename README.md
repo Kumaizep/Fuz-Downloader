@@ -19,7 +19,7 @@ Download the zip file from [here](https://github.com/Kumaizep/Fuz-downloader/arc
 
 ### Script installation (Experimental)
 ```
-curl -LO https://github.com/Kumaizep/Fuz-Downloader/releases/download/latest-dev/fuz-donwloader && chmod +x fuz-donwloader && mv fuz-donwloader ~/.local/bin && fuz-donwloader -i
+curl -LO https://github.com/Kumaizep/Fuz-Downloader/releases/download/latest-dev/fuz-donwloader && chmod +x fuz-donwloader && sudo mv fuz-donwloader /usr/local/bin && fuz-donwloader -i
 ```
 
 
