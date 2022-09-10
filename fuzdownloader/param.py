@@ -9,6 +9,8 @@ class Param(object):
     """docstring for param"""
 
     def __init__(self):
+        Path(param.DATA_DIR).mkdir(parents=True, exist_ok=True)
+
         self.DEFAULT_LANGUAGE_SETTING = {
             "language": "ja-JP",
             "list": ["en-US", "ja-JP", "zh-TW"],
