@@ -9,6 +9,7 @@ Install () {
     requiredver="3.10.0"
 
     if [ ! command -v poetry &> /dev/null ]; then
+        echo "[#] Poetry not found"
         if [ ! command -v python &> /dev/null ]; then
             echo "Could not find python or the version is too old."
             exit
@@ -16,6 +17,7 @@ Install () {
             echo "Could not find python or the version is too old."
             exit
         fi
+        echo "[#] Try to install poetry"
         curl -sSL https://install.python-poetry.org | python3 -
     fi
 
@@ -94,7 +96,7 @@ while [ True ]; do
         Update
         exit
     elif [ "$1" = "" ]; then
-        cd ~/.fuz-downloader/Fuz-Downloader-dev
+        cd ~/.fuz-downloader/Fuz-Downloader-main
         poetry run fuzdownloader $OPTION
         exit
     else
