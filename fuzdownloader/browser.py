@@ -163,18 +163,10 @@ class fuz_browser:
         option_lables[2].click()
         time.sleep(1)
 
-    def issue_selector(self, book_id: int, skip: bool) -> List[int]:
-        self.jump_to_picked_book(book_id)
-        title = self.find_elem_by_css("h1")
-        rich.cnsl.rule(
-            "[bold sky_blue3]< " + title.text.split()[0] + " >[/bold sky_blue3]",
-            style="sky_blue3",
-        )
-        issues_title = self.find_elems_by_css("h2")
-        issues_title_list = [(issues_title[i].text, i) for i in range(3)]
-
+    def issue_selector(self, issue_info, skip: bool) -> List[int]:
+        issues_title_list = [(issue_info[i][1], i) for i in range(3)]
         if skip:
-             rich.cnsl.print("[+] セレクター： " + issues_title[0], style="sky_blue3")
+            rich.cnsl.print("[+] セレクター： " + issue_info[0][1], style="sky_blue3")
             return [0]
         else:
             questions = [
@@ -337,13 +329,18 @@ class fuz_browser:
         return result
 
     def jump_to_manga_viewer(self, manga_id: int) -> None:
-        book_url = "https://comic-fuz.com/manga/viewer/" + str(manga_id)
-        self.driver.get(book_url)
+        viewer_url = "https://comic-fuz.com/manga/viewer/" + str(manga_id)
+        self.driver.get(viewer_url)
         time.sleep(1)
 
     def jump_to_book_viewer(self, book_id: int) -> None:
-        book_url = "https://comic-fuz.com/book/viewer/" + str(book_id)
-        self.driver.get(book_url)
+        viewer_url = "https://comic-fuz.com/book/viewer/" + str(book_id)
+        self.driver.get(viewer_url)
+        time.sleep(1)
+
+    def jump_to_magazine_viewer(self, magazine_id: int) -> None:
+        viewer_url = "https://comic-fuz.com/magazine/viewer/" + str(magazine_id)
+        self.driver.get(viewer_url)
         time.sleep(1)
 
     # def get_free_chapter(self) -> List[List[str]]:
@@ -435,6 +432,24 @@ class fuz_browser:
                 rich.cnsl.print(events_id)
         return events[-1]["params"]["requestId"]
 
+    def get_magazine_detail_request(self):
+        events = self.get_fetch_response_by_url(
+            "https://api.comic-fuz.com/v1/magazine_issue_detail"
+        )
+        if len(events) == 0:
+            time.sleep(0.5)
+            return self.get_book_detail_request()
+        elif len(events) > 1:
+            if param.DEBUG_MODE:
+                events_id = [event["params"]["requestId"] for event in events]
+                rich.cnsl.print(
+                    param.SWARNING + "Get multiple magazine_detail request! ",
+                    style="red1",
+                    end="",
+                )
+                rich.cnsl.print(events_id)
+        return events[-1]["params"]["requestId"]
+
     def get_fetch_response_by_url(self, url):
         browser_log = self.driver.get_log("performance")
         events = [process_browser_log_entry(entry) for entry in browser_log]
@@ -464,6 +479,14 @@ class fuz_browser:
             message_json["4"] = [message_json["4"]]
         for volumn in message_json["4"]:
             volumn_info.append(["7" in volumn.keys(), [volumn["1"], volumn["2"]]])
+        return [message_json["2"], volumn_info]
+
+    def filter_magazine_detail(self, message_json):
+        volumn_info = list()
+        if type(message_json["4"]) is dict:
+            message_json["4"] = [message_json["4"]]
+        for volumn in message_json["4"]:
+            volumn_info.append([volumn["1"], volumn["2"]])
         return [message_json["2"], volumn_info]
 
     # def filter_manga_detail(self, message_json):

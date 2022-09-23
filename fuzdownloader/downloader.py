@@ -147,11 +147,22 @@ class fuz_downloader:
         return download_count
 
     def handle_maganize(self, picked_book: int, skip_sele: bool) -> int:
-        picked_issues = self.fuz_web.issue_selector(picked_book, skip_sele)
-        book_title = self.fuz_web.find_elems_by_css(
-            "h1[class^='magazine_issue_detail']"
-        ).text
+        self.fuz_web.jump_to_picked_book(picked_book)
+
+        request_id = self.fuz_web.get_magazine_detail_request()
+        message_json = self.fuz_web.protobuf_request_decode(request_id)
+        magazine_title, issue_info = self.fuz_web.filter_magazine_detail(
+            message_json
+        )
+
+        rich.cnsl.rule(
+            "[bold sky_blue3]< " + magazine_title + " >[/bold sky_blue3]",
+            style="sky_blue3",
+        )
+
+        picked_issues = self.fuz_web.issue_selector(issue_info, skip_sele)
         for picked_issue in picked_issues:
-            self.fuz_web.jump_to_picked_issue(picked_issue)
-            self.fuz_web.download_book(subdir=book_title)
+            self.fuz_web.jump_to_magazine_viewer(issue_info[picked_issue][0])
+            # self.fuz_web.jump_to_picked_issue(picked_issue)
+            self.fuz_web.download_book(subdir=magazine_title)
         return len(picked_issues)
