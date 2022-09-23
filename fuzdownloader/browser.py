@@ -166,7 +166,7 @@ class fuz_browser:
     def issue_selector(self, book_id: int, skip: bool) -> List[int]:
         self.jump_to_picked_book(book_id)
         title = self.find_elem_by_css("h1")
-        rich.csnl.rule(
+        rich.cnsl.rule(
             "[bold sky_blue3]< " + title.text.split()[0] + " >[/bold sky_blue3]",
             style="sky_blue3",
         )
@@ -174,7 +174,7 @@ class fuz_browser:
         issues_title_list = [(issues_title[i].text, i) for i in range(3)]
 
         if skip:
-            csnl.print("[+] セレクター： " + issues_title[0], style="sky_blue3")
+            cnsl.print("[+] セレクター： " + issues_title[0], style="sky_blue3")
             return [0]
         else:
             questions = [
