@@ -41,7 +41,7 @@ class fuz_downloader:
                 count = self.handle_viewer_url()
             else:
                 # Handling maganize options.
-                count = self.handle_maganize(picked_book)
+                count = self.handle_maganize(picked_book, skip_sele)
             download_count = download_count + count
             rich.cnsl.print("")
 
@@ -146,7 +146,7 @@ class fuz_downloader:
                 download_count = download_count + 1
         return download_count
 
-    def handle_maganize(self, picked_book: int) -> int:
+    def handle_maganize(self, picked_book: int, skip_sele: bool) -> int:
         picked_issues = self.fuz_web.issue_selector(picked_book, skip_sele)
         book_title = self.fuz_web.find_elems_by_css(
             "h1[class^='magazine_issue_detail']"
