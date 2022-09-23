@@ -19,7 +19,7 @@ protobuf = "^4.21.5"
 six = "^1.16.0"
 
 [tool.poetry.dev-dependencies]
-pytest="^7.1.2"
+
 
 [tool.poetry.scripts]
 fuzdownloader = "fuzdownloader.main:main"
