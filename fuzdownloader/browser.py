@@ -174,7 +174,7 @@ class fuz_browser:
         issues_title_list = [(issues_title[i].text, i) for i in range(3)]
 
         if skip:
-            cnsl.print("[+] セレクター： " + issues_title[0], style="sky_blue3")
+             rich.cnsl.print("[+] セレクター： " + issues_title[0], style="sky_blue3")
             return [0]
         else:
             questions = [
