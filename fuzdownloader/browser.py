@@ -166,7 +166,7 @@ class fuz_browser:
     def issue_selector(self, issue_info, skip: bool) -> List[int]:
         issues_title_list = [(issue_info[i][1], i) for i in range(3)]
         if skip:
-            rich.cnsl.print("[+] セレクター： " + issue_info[0][1], style="sky_blue3")
+            rich.cnsl.print(context.browser_t("autoSelector") + issue_info[0][1], style="sky_blue3")
             return [0]
         else:
             questions = [
