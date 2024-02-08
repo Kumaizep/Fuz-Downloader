@@ -16,6 +16,9 @@ def main() -> None:
         elif len(sys.argv) >= argv_offset + 2 and sys.argv[argv_offset] == "set-dir":
             param.set_output_directory(sys.argv[argv_offset + 1])
             argv_offset += 2
+        elif len(sys.argv) >= argv_offset + 1 and sys.argv[argv_offset] == "debug-mode":
+            param.set_debug_mode(True)
+            argv_offset += 1
 
     fuzdl = fuz_downloader()
     fuzdl.run(skip_sele)

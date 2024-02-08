@@ -20,6 +20,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 from .console import *
@@ -53,6 +55,7 @@ class fuz_browser:
             )
         else:
             self.driver = webdriver.Chrome(options=options, desired_capabilities=caps)
+        # self.driver.set_window_size(400,900)
         self.driver.implicitly_wait(3)
         self.driver.get("https://comic-fuz.com/account/signin")
         self.account = get_account_info()
@@ -263,8 +266,13 @@ class fuz_browser:
             need_turning = True
             for pn in range(page_num):
                 rich.advance_single_progress()
-                curr_page_uri = self.get_page_uri(pn)
-                bytes = self.get_file_content_chrome(curr_page_uri)
+                bytes = None
+                while bytes == None:
+                    self.driver.refresh()
+                    curr_page_uri = self.get_page_uri(pn)
+                    if param.DEBUG_MODE:
+                        print(pn, curr_page_uri)
+                    bytes = self.get_file_content_chrome(curr_page_uri)
                 save_file(save_dir, pn, bytes)
                 if need_turning == True:
                     self.driver.find_element(By.XPATH, "//body").send_keys(
@@ -282,36 +290,74 @@ class fuz_browser:
         return page_num
 
     def get_page_uri(self, page: int) -> str:
-        try:
-            page_img = self.driver.find_element(
-                By.XPATH, "//img[@alt='page_" + str(page) + "']"
-            )
-        except:
+        # if page % 2 == 1:
+        max_page = self.find_elem_by_css("p[class^='ViewerFooter_footer__page']")
+        # print(max_page.text)
+        max_page = int(max_page.text.split()[0])
+        if max_page == 1:
+            max_page = 0
+
+        while page > max_page:
+            # time.sleep(0)
+            p
             self.driver.find_element(By.XPATH, "//body").send_keys(Keys.ARROW_LEFT)
+            time.sleep(1)
+        while page < max_page - 1:
+            self.driver.find_element(By.XPATH, "//body").send_keys(Keys.ARROW_RIGHT)
+            time.sleep(1)
+
+        try:
+            wait = WebDriverWait(self.driver, 5)
+            element = wait.until(EC.presence_of_element_located((By.XPATH, "//img[@alt='page_" + str(page) + "']")))
             page_img = self.driver.find_element(
                 By.XPATH, "//img[@alt='page_" + str(page) + "']"
             )
-        page_src = page_img.get_attribute("src")
-        while page_src == None:
             page_src = page_img.get_attribute("src")
-        return page_src
+            while page_src == None:
+                page_src = page_img.get_attribute("src")
+            return page_src
+        except:
+            self.driver.refresh()
+            time.sleep(1)
+            return self.get_page_uri(page)
+
+    def get_image_response_content_by_url(self, url):
+        browser_log = self.driver.get_log("performance")
+        events = [process_browser_log_entry(entry) for entry in browser_log]
+        events = [
+            event
+            for event in events
+            if event["method"] == "Network.responseReceived"
+            and event["params"]["type"] == "Image"
+            and event["params"]["response"]["url"] == url
+        ]
+        if len(events) == 0:
+            return None
+        # for elem in events:
+        #     print(elem, end="\n\n")
+        response_content = self.driver.execute_cdp_cmd('Network.getResponseBody', {'requestId': events[0]["params"]["requestId"]})
+        # print(response_content)
+        return response_content["body"]
 
     def get_file_content_chrome(self, uri: str) -> bytes:
-        result = self.driver.execute_async_script(
-            """
-            var uri = arguments[0];
-            var callback = arguments[1];
-            var toBase64 = function(buffer){for(var r,n=new Uint8Array(buffer),t=n.length,a=new Uint8Array(4*Math.ceil(t/3)),i=new Uint8Array(64),o=0,c=0;64>c;++c)i[c]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charCodeAt(c);for(c=0;t-t%3>c;c+=3,o+=4)r=n[c]<<16|n[c+1]<<8|n[c+2],a[o]=i[r>>18],a[o+1]=i[r>>12&63],a[o+2]=i[r>>6&63],a[o+3]=i[63&r];return t%3===1?(r=n[t-1],a[o]=i[r>>2],a[o+1]=i[r<<4&63],a[o+2]=61,a[o+3]=61):t%3===2&&(r=(n[t-2]<<8)+n[t-1],a[o]=i[r>>10],a[o+1]=i[r>>4&63],a[o+2]=i[r<<2&63],a[o+3]=61),new TextDecoder("ascii").decode(a)};
-            var xhr = new XMLHttpRequest();
-            xhr.responseType = 'arraybuffer';
-            xhr.onload = function(){ callback(toBase64(xhr.response)) };
-            xhr.onerror = function(){ callback(xhr.status) };
-            xhr.open('GET', uri);
-            xhr.send();
-            """,
-            uri,
-        )
-        if type(result) == int:
+        # result = self.driver.execute_async_script(
+        #     """
+        #     var uri = arguments[0];
+        #     var callback = arguments[1];
+        #     var toBase64 = function(buffer){for(var r,n=new Uint8Array(buffer),t=n.length,a=new Uint8Array(4*Math.ceil(t/3)),i=new Uint8Array(64),o=0,c=0;64>c;++c)i[c]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charCodeAt(c);for(c=0;t-t%3>c;c+=3,o+=4)r=n[c]<<16|n[c+1]<<8|n[c+2],a[o]=i[r>>18],a[o+1]=i[r>>12&63],a[o+2]=i[r>>6&63],a[o+3]=i[63&r];return t%3===1?(r=n[t-1],a[o]=i[r>>2],a[o+1]=i[r<<4&63],a[o+2]=61,a[o+3]=61):t%3===2&&(r=(n[t-2]<<8)+n[t-1],a[o]=i[r>>10],a[o+1]=i[r>>4&63],a[o+2]=i[r<<2&63],a[o+3]=61),new TextDecoder("ascii").decode(a)};
+        #     var xhr = new XMLHttpRequest();
+        #     xhr.responseType = 'arraybuffer';
+        #     xhr.onload = function(){ callback(toBase64(xhr.response)) };
+        #     xhr.onerror = function(){ callback(xhr.status) };
+        #     xhr.open('GET', uri);
+        #     xhr.send();
+        #     """,
+        #     uri,
+        # )
+        result = self.get_image_response_content_by_url(uri)
+        if result == None:
+            return None
+        if type(result) != str:
             raise Exception("Request failed with status %s" % result)
         return base64.b64decode(result)
 

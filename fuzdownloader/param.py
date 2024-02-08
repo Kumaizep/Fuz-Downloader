@@ -99,5 +99,8 @@ class Param(object):
         print("[#] Message: Successfully set the language to " + data["dir"])
         self.OUTPUT_DIR = data["dir"]
 
+    def set_debug_mode(self, statue: bool) -> None:
+        self.DEBUG_MODE = statue
+
 
 param = Param()
