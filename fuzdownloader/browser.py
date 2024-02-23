@@ -299,7 +299,6 @@ class fuz_browser:
 
         while page > max_page:
             # time.sleep(0)
-            p
             self.driver.find_element(By.XPATH, "//body").send_keys(Keys.ARROW_LEFT)
             time.sleep(1)
         while page < max_page - 1:
