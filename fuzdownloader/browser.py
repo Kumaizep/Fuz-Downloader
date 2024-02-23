@@ -44,22 +44,25 @@ class fuz_browser:
         )
         options = Options()
         # options = webdriver.ChromeOptions()
-        # options.set_capability("loggingPrefs", {'performance': 'ALL'})
+        options.set_capability("goog:loggingPrefs", {'performance': 'ALL'})
         if not param.DEBUG_MODE:
             options.add_argument("--headless")
-        caps = DesiredCapabilities.CHROME
-        caps["goog:loggingPrefs"] = {"performance": "ALL"}
+        # caps = DesiredCapabilities.CHROME
+        # caps["goog:loggingPrefs"] = {"performance": "ALL"}
         if shutil.which("chromedriver") is None:
             self.driver = webdriver.Chrome(
                 service=Service(ChromeDriverManager().install()),
                 options=options,
-                desired_capabilities=caps,
+                # desired_capabilities=caps,
             )
             
             # service = ChromeService(executable_path'/usr/local/bin/chromedriver')
             # self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         else:
-            self.driver = webdriver.Chrome(options=options, desired_capabilities=caps)
+            self.driver = webdriver.Chrome(
+                options=options, 
+                # desired_capabilities=caps,
+            )
             # self.driver = webdriver.Chrome(options=options)
         # self.driver.set_window_size(400,900)
         self.driver.implicitly_wait(3)
